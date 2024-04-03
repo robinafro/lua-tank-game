@@ -38,6 +38,23 @@ function RunService:Delay(seconds, func)
     end)
 end
 
+function RunService:Wait(seconds)
+    local start = love.timer.getTime()
+    local co = coroutine.running()
+    local id
+
+    id = self:Connect("Heartbeat", function()
+        if love.timer.getTime() - start < seconds then
+            return
+        end
+        
+        self:Disconnect("Heartbeat", id)
+        coroutine.resume(co)
+    end)
+
+    coroutine.yield()
+end
+
 --// System functions
 
 function RunService.new()
