@@ -3,19 +3,7 @@ uuid = require("uuid")
 RunService = {}
 RunService.__index = RunService
 
-function RunService.new()
-    local self = setmetatable({}, RunService)
-
-    self.RefreshRate = 60
-
-    self.Events = {
-        RenderStepped = {Delta = 0, Last = 0, Functions = {}}, --// Run before rendering
-        Stepped = {Delta = 0, Last = 0, Functions = {}}, --// Run before physics
-        Heartbeat = {Delta = 0, Last = 0, Functions = {}} --// Run after frame done
-    }
-
-    return self
-end
+--// User functions
 
 function RunService:Connect(event, func)
     local id = uuid()
@@ -32,6 +20,36 @@ function RunService:Disconnect(event, id)
     self.Events[event].Functions[id] = nil
 
     return true
+end
+
+function RunService:Delay(seconds, func)
+    if not func or not seconds then return end
+
+    local start = love.timer.getTime()
+    
+    local id
+    id = self:Connect("Heartbeat", function()
+        if love.timer.getTime() - start < seconds then
+            return
+        end
+
+        self:Disconnect("Heartbeat", id)
+        func()
+    end)
+end
+
+--// System functions
+
+function RunService.new()
+    local self = setmetatable({}, RunService)
+
+    self.Events = {
+        RenderStepped = {Delta = 0, Last = 0, Functions = {}}, --// Run before rendering
+        Stepped = {Delta = 0, Last = 0, Functions = {}}, --// Run before physics
+        Heartbeat = {Delta = 0, Last = 0, Functions = {}} --// Run after frame done
+    }
+
+    return self
 end
 
 function RunService:Trigger(event)
