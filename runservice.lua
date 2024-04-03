@@ -71,12 +71,14 @@ end
 
 function RunService:Trigger(event)
     self:SetDelta(event)
+
+    local eventObj = self.Events[event]
     
-    for _, func in pairs(self.Events[event].Functions) do
-        if self.Events[event].Async then
-            coroutine.wrap(func)(self.Events[event].Delta)
+    for _, func in pairs(eventObj.Functions) do
+        if eventObj.Async then
+            coroutine.wrap(func)(eventObj.Delta)
         else
-            func(self.Events[event].Delta)
+            func(eventObj.Delta)
         end
     end
 end
