@@ -15,7 +15,11 @@ function love.load()
         local module = require("modules." .. moduleName)
 
         if module.init then
-            module.init({RunService = RunService, Paths = paths})
+            local co = coroutine.create(function()
+                module.init({RunService = RunService, Paths = paths})
+            end)
+
+            coroutine.resume(co)
         end
     end
 end
