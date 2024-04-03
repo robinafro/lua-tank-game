@@ -61,9 +61,9 @@ function RunService.new()
     local self = setmetatable({}, RunService)
 
     self.Events = {
-        RenderStepped = {Delta = 0, Last = 0, Functions = {}}, --// Run before rendering
-        Stepped = {Delta = 0, Last = 0, Functions = {}}, --// Run before physics
-        Heartbeat = {Delta = 0, Last = 0, Functions = {}} --// Run after frame done
+        RenderStepped = {Delta = 0, Last = 0, Async = false, Functions = {}}, --// Run before rendering
+        Stepped = {Delta = 0, Last = 0, Async = false, Functions = {}}, --// Run before physics
+        Heartbeat = {Delta = 0, Last = 0, Async = true, Functions = {}} --// Run after frame done
     }
 
     return self
@@ -73,7 +73,11 @@ function RunService:Trigger(event)
     self:SetDelta(event)
     
     for _, func in pairs(self.Events[event].Functions) do
-        func(self.Events[event].Delta)
+        if self.Events[event].Async then
+            coroutine.wrap(func)(self.Events[event].Delta)
+        else
+            func(self.Events[event].Delta)
+        end
     end
 end
 
