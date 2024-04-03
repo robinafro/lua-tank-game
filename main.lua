@@ -4,6 +4,9 @@ function love.load()
     RunService = runservice.new()
     RunService:SetDelta()
 
+    --// Set up path hierarchy
+    local paths = {} --// This same table will be passed to all modules, so that they can interact by writing/reading objects.
+
     --// Load modules
     local modules = love.filesystem.getDirectoryItems("modules")
 
@@ -12,7 +15,7 @@ function love.load()
         local module = require("modules." .. moduleName)
 
         if module.init then
-            module.init({RunService = RunService})
+            module.init({RunService = RunService, Paths = paths})
         end
     end
 end
