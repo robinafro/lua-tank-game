@@ -1,8 +1,11 @@
 function love.load()
     local runservice = require("runservice")
+    local objectservice = require("objectservice")
 
     RunService = runservice.new()
     RunService:SetDelta()
+
+    ObjectService = objectservice.new()
 
     --// Set up path hierarchy
     local paths = {} --// This same table will be passed to all modules, so that they can interact by writing/reading objects.
@@ -16,7 +19,7 @@ function love.load()
 
         if module.init then
             local co = coroutine.create(function()
-                module.init({RunService = RunService, Paths = paths})
+                module.init({RunService = RunService, ObjectService = ObjectService, Paths = paths})
             end)
 
             coroutine.resume(co)
@@ -26,6 +29,8 @@ end
 
 function love.draw()
     RunService:Trigger("RenderStepped")
+
+    ObjectService:Render(RunService:GetDelta("RenderStepped"))
 end
 
 function love.update(dt)
