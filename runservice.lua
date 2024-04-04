@@ -43,6 +43,8 @@ function RunService:Wait(seconds)
     local co = coroutine.running()
     local id
 
+    assert(co, "RunService:Wait() must be called from a coroutine")
+
     id = self:Connect("Heartbeat", function()
         if love.timer.getTime() - start < seconds then
             return
@@ -53,6 +55,10 @@ function RunService:Wait(seconds)
     end)
 
     coroutine.yield()
+end
+
+function RunService:GetDelta(event)
+    return self.Events[event].Delta
 end
 
 --// System functions
