@@ -13,6 +13,7 @@ end
 
 function Controller:Control(controlling)
     self.Controlling = controlling
+    controlling.Controller = self
 
     return function(dt)
         self:Update(dt)
