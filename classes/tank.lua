@@ -12,8 +12,8 @@ function Tank.new()
     self.RotVelocity = 0
     self.Direction = 0
 
-    self.Width = 28
-    self.Length = 35
+    self.Width = 35
+    self.Length = 50
 
     self.Input = {
         Z = 0,
@@ -33,7 +33,7 @@ function Tank:Render()
     love.graphics.push()
     love.graphics.translate(self.X, self.Y)
     love.graphics.rotate(self.Direction)
-    love.graphics.rectangle("fill", -self.Length / 2, -self.Width / 2, self.Length, self.Width)
+    love.graphics.draw(self.Image, -self.Length / 2, -self.Width / 2, 0, self.Length / self.Image:getWidth(), self.Width / self.Image:getHeight())
     love.graphics.pop()
 end
 
