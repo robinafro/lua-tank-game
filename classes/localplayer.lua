@@ -6,7 +6,13 @@ Player.__index = Player
 function Player.new()
     local self = setmetatable({}, Player)
 
+    self.Camera = nil
+
     return self
+end
+
+function Player:SetCamera(cam)
+    self.Camera = cam
 end
 
 function Player:Update(dt)
