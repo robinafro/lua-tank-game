@@ -11,12 +11,17 @@ function Object.new(fnc)
         Height = 0,
         ZIndex = 0,
         Color = {1, 1, 1, 1},
-        Function = fnc
+        Function = fnc,
+        Image = ""
     }, Object)
 
     self.__index = self
 
     return self
+end
+
+function Object:SetImage(image)
+    self.Image = love.graphics.newImage(image)
 end
 
 return Object
