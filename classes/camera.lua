@@ -26,7 +26,8 @@ function Camera:Render(renderables, dt)
         if renderable.Function then
             renderable.Function(dt)
         else
-            if renderable.Image then
+            print(renderable.Image)
+            if renderable.Image and renderable.Image ~= "" then
                 love.graphics.draw(renderable.Image, renderable.X, renderable.Y, 0, renderable.Width / renderable.Image:getWidth(), renderable.Height / renderable.Image:getHeight())
             else
                 love.graphics.rectangle("fill", renderable.X, renderable.Y, renderable.Width, renderable.Height)
