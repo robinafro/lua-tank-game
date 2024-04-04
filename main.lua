@@ -17,7 +17,7 @@ function love.load()
         local moduleName = module:sub(1, -5) -- remove the file extension (.lua)
         local module = require("modules." .. moduleName)
 
-        if module.init then
+        if module["init"] ~= nil then
             local co = coroutine.create(function()
                 module.init({RunService = RunService, ObjectService = ObjectService, Paths = paths})
             end)
