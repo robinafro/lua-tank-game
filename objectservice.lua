@@ -7,7 +7,7 @@ function ObjectService.new()
     local self = setmetatable({}, ObjectService)
 
     self.Renderables = {}
-    self.Camera = {}
+    self.Camera = nil
     
     return self
 end
@@ -36,24 +36,18 @@ function ObjectService:Render(dt)
             table.insert(sortedRenderables, renderable)
         end
     end
-    
+
     table.sort(sortedRenderables, function(a, b)
         return a.ZIndex < b.ZIndex
     end)
     
-    for _, renderable in ipairs(sortedRenderables) do
-        if renderable.Function then
-            renderable.Function(dt)
-        else
-            love.graphics.setColor(unpack(renderable.Color or {1, 1, 1, 1}))
-
-            if renderable.Image then
-                love.graphics.draw(renderable.Image, renderable.X, renderable.Y, 0, renderable.Width / renderable.Image:getWidth(), renderable.Height / renderable.Image:getHeight())
-            else
-                love.graphics.rectangle("fill", renderable.X, renderable.Y, renderable.Width, renderable.Height)
-            end
-        end
+    if self.Camera then
+        self.Camera:Render(sortedRenderables, dt)
     end
+end
+
+function ObjectService:SetCamera(camera)
+    self.Camera = camera
 end
 
 return ObjectService
