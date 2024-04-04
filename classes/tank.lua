@@ -1,4 +1,4 @@
-Object = require("modules.object")
+Object = require("classes.object")
 
 local Tank = setmetatable({}, Object)
 Tank.__index = Tank
@@ -6,8 +6,8 @@ Tank.__index = Tank
 function Tank.new()
     local self = setmetatable(Object.new(), Tank)
 
-    self.ForwSpeed = 100
-    self.RotSpeed = 1
+    self.ForwSpeed = 150
+    self.RotSpeed = 2
     self.ForwVelocity = 0
     self.RotVelocity = 0
     self.Direction = 0
@@ -21,10 +21,11 @@ function Tank.new()
     }
     
     self.Function = function(dt)
-        self:Update(dt)
         self:Render()
     end
 
+    self.Controller = nil
+    
     return self
 end
 

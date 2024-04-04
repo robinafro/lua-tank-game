@@ -34,6 +34,7 @@ function love.draw()
 end
 
 function love.update(dt)
+    -- trigger network event in the future
     RunService:Trigger("Stepped")
 
     --// Do something here
