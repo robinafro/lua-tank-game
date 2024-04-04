@@ -18,22 +18,22 @@ end
 
 function Camera:Render(renderables, dt)
     for _, renderable in ipairs(renderables) do
+        love.graphics.setColor(unpack(renderable.Color or {1, 1, 1, 1}))
+
+        love.graphics.push()
+        love.graphics.translate(-self.X, -self.Y)
+
         if renderable.Function then
-            love.graphics.push()
-            love.graphics.translate(-self.X, -self.Y)
-
             renderable.Function(dt)
-
-            love.graphics.pop()
         else
-            love.graphics.setColor(unpack(renderable.Color or {1, 1, 1, 1}))
-
             if renderable.Image then
                 love.graphics.draw(renderable.Image, renderable.X - self.X, renderable.Y - self.Y, 0, renderable.Width / renderable.Image:getWidth(), renderable.Height / renderable.Image:getHeight())
             else
-                love.graphics.rectangle("fill", renderable.X - self.X, renderable.Y - self.Y, renderable.Width, renderable.Height)
+                love.graphics.rectangle("fill", renderable.X, renderable.Y, renderable.Width, renderable.Height)
             end
         end
+
+        love.graphics.pop()
     end
 end
 
