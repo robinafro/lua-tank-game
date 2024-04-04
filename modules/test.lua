@@ -1,4 +1,10 @@
+camera = require("modules.camera")
+
 return {init = function(game)
+    local cam = camera.new()
+
+    game.ObjectService:SetCamera(cam)
+
     game.ObjectService:Add({
         X = 0,
         Y = 0,
@@ -17,4 +23,8 @@ return {init = function(game)
             love.graphics.rectangle("fill", x, y, 50, 50)
         end
     })
+
+    game.RunService:Connect("RenderStepped", function(dt)
+        cam:MoveTo(math.random(-10, 10), math.random(-10, 10))
+    end)
 end}
