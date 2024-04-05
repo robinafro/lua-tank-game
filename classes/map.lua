@@ -15,7 +15,6 @@ function Map.new()
 end
 
 function Map:Generate()
-    -- math.randomseed(os.time())
     local seed = math.random(-2147483640, 2147483640)
 
     for x = 0, self.Size - 1 do
