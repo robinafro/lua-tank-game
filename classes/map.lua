@@ -57,8 +57,6 @@ function Map:SpawnObject(object, perimeter)
     local x = math.random(perimeter[1], perimeter[2])
     local y = math.random(perimeter[3], perimeter[4])
 
-    print(x, y)
-
     object.X = x
     object.Y = y
 
