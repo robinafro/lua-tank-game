@@ -28,7 +28,7 @@ function Map:Generate()
             end
 
             num = math.min(math.max(num, 0), self.nBiomes - 1)
-            color = {num / self.nBiomes * 0.1, num / self.nBiomes * 0.7, num / self.nBiomes * 0.2, 1}
+            color = {num / self.nBiomes * 0.2, num / self.nBiomes * 0.7, num / self.nBiomes * 0.2, 1}
             
             local chunk = require("classes.chunk").new(x, y, self.ChunkSize)
             
