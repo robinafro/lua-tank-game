@@ -6,14 +6,23 @@ function Camera.new()
 
     self.X = 0
     self.Y = 0
-    self.FOV = 90
+
+    self.MaxTweenSpeed = 2
 
     return self
 end
 
-function Camera:MoveTo(x, y)
+function Camera:SetPosition(x, y)
     self.X = x
     self.Y = y
+end
+
+function Camera:MoveTo(x, y)
+    local goalX = x - love.graphics.getWidth() / 2
+    local goalY = y - love.graphics.getHeight() / 2
+
+    self.X = self.X + (goalX - self.X) * self.MaxTweenSpeed * love.timer.getDelta()
+    self.Y = self.Y + (goalY - self.Y) * self.MaxTweenSpeed * love.timer.getDelta()
 end
 
 function Camera:Render(renderables, dt)
