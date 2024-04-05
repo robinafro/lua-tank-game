@@ -7,10 +7,12 @@ function Map.new()
     local self = setmetatable(Object.new(), {__index = Map})
     
     self.Density = 100
-    self.Size = 250
+    self.Size = 100
+    -- self.Size = 16
     self.nBiomes = 3
 
     self.Chunks = {}
+    self.Image = love.graphics.newImage("assets/textures/grass.png")
 
     return self
 end
@@ -38,22 +40,30 @@ function Map:Generate()
             end
 
             self.Chunks[x][y] = chunk
+
+            chunk:SetImage(self.Image)
         end
     end
 end
 
-function Map:PrepareToRender()
-    self.Function = function()
-        self:Render()
-    end
-end
-
-function Map:Render()
+function Map:PrepareToRender(callback)
     for x, row in pairs(self.Chunks) do
         for y, chunk in pairs(row) do
-            chunk:Render()
+            chunk.Function = function()
+                chunk:Render()
+            end
+
+            callback(chunk)
         end
     end
 end
+
+-- function Map:Render()
+--     for x, row in pairs(self.Chunks) do
+--         for y, chunk in pairs(row) do
+--             chunk:Render()
+--         end
+--     end
+-- end
 
 return Map

@@ -9,23 +9,29 @@ function Chunk.new(x, y)
 
     self.Object = Object.new()
 
-    self.X = x
-    self.Y = y
+    self.Xnum = x
+    self.Ynum = y
 
-    self.Size = 100
-
-    self.Loaded = true
+    self.Size = 300
+    
+    self.X = self.Xnum * self.Size
+    self.Y = self.Ynum * self.Size
 
     return self
 end
 
 function Chunk:Render()
-    if self.Loaded == false then
+    print("Rendering chunk at " .. self.Xnum .. ", " .. self.Ynum)
+    if self.Image == nil then
         return
     end
     
     love.graphics.setColor(self.Color)
-    love.graphics.rectangle("fill", self.X * self.Size, self.Y * self.Size, self.Size, self.Size)
+    love.graphics.draw(self.Image, self.Xnum * self.Size, self.Ynum * self.Size)
+end
+
+function Chunk:SetImage(image)
+    self.Image = image
 end
 
 return Chunk
