@@ -21,7 +21,7 @@ function Map:Generate()
         for y = 0, self.Size - 1 do
             local num = 0
             for i = 1, self.nBiomes - 1 do
-                num = num + love.math.noise(x / self.Size, y / self.Size, i + seed)-- * self.nBiomes - 1
+                num = num + love.math.noise(x / self.Size, y / self.Size, i + seed)
             end
 
             num = math.min(math.max(num, 0), self.nBiomes - 1)
