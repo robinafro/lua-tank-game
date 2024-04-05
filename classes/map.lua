@@ -8,6 +8,7 @@ function Map.new()
     
     self.Density = 100
     self.Size = 100
+    self.ChunkSize = 300
     self.nBiomes = 3
 
     self.Chunks = {}
@@ -29,8 +30,8 @@ function Map:Generate()
             num = math.min(math.max(num, 0), self.nBiomes - 1)
             color = {num / self.nBiomes * 0.1, num / self.nBiomes * 0.7, num / self.nBiomes * 0.2, 1}
             
-            local chunk = require("classes.chunk").new(x, y)
-
+            local chunk = require("classes.chunk").new(x, y, self.ChunkSize)
+            
             chunk.BiomeNum = num
             chunk.Color = color
 
@@ -43,18 +44,27 @@ function Map:Generate()
             chunk:SetImage(self.Image)
         end
     end
+
+    return self.Chunks
 end
 
-function Map:PrepareToRender(callback)
-    for x, row in pairs(self.Chunks) do
-        for y, chunk in pairs(row) do
-            chunk.Function = function()
-                chunk:Render()
-            end
-
-            callback(chunk)
-        end
+function Map:SpawnObject(perimeter, object)
+    if type(perimeter) == "number" then
+        local realSize = self.Size * self.ChunkSize
+        perimeter = {realSize/2 - perimeter/2, realSize/2 + perimeter/2, realSize/2 - perimeter/2, realSize/2 + perimeter/2}
     end
+    
+    local x = math.random(perimeter[1], perimeter[2])
+    local y = math.random(perimeter[3], perimeter[4])
+
+    object.X = x
+    object.Y = y
+
+    return object
+end
+
+function Map:GetChunkSize()
+    return self.ChunkSize
 end
 
 return Map

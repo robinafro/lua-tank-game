@@ -1,21 +1,24 @@
 Object = require("classes.object")
 Map = require("classes.map")
 
-Chunk = setmetatable({}, {__index = Map})
-Chunk.__index = Chunk   
+Chunk = setmetatable({}, Map)
+Chunk.__index = Chunk
 
-function Chunk.new(x, y)
+function Chunk.new(x, y, size)
     local self = setmetatable({}, Chunk)
-
     self.Object = Object.new()
 
     self.Xnum = x
     self.Ynum = y
 
-    self.Size = 300
+    self.ChunkSize = size
     
-    self.X = self.Xnum * self.Size
-    self.Y = self.Ynum * self.Size
+    self.X = self.Xnum * self.ChunkSize
+    self.Y = self.Ynum * self.ChunkSize
+
+    self.Object.Function = function()
+        self:Render()
+    end
 
     return self
 end
@@ -26,7 +29,7 @@ function Chunk:Render()
     end
     
     love.graphics.setColor(self.Color)
-    love.graphics.draw(self.Image, self.Xnum * self.Size, self.Ynum * self.Size)
+    love.graphics.draw(self.Image, self.Xnum * self.ChunkSize, self.Ynum * self.ChunkSize)
 end
 
 function Chunk:SetImage(image)

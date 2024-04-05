@@ -1,6 +1,9 @@
 return {init = function(game)
     map = require("classes.map").new()
 
-    map:Generate()
-    map:PrepareToRender(function(c) game.ObjectService:Add(c) end)
+    for x, row in pairs(map:Generate()) do
+        for y, chunk in pairs(row) do
+            game.ObjectService:Add(chunk.Object)
+        end
+    end
 end}
