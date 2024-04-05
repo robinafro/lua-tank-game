@@ -18,6 +18,10 @@ local function init(g)
     local tankCollider = require("classes.collider").new()
     tankCollider.Object = localPlayer.Controlling
 
+    tankCollider.CollisionName = "default"
+    tankCollider.CollisionFilterType = "Include"
+    tankCollider.CollisionFilter = {"default", "player"}
+
     if not game.Paths.Colliders then
         game.Paths.Colliders = {}
     end
