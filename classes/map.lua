@@ -7,7 +7,7 @@ function Map.new()
     local self = setmetatable(Object.new(), {__index = Map})
     
     self.Density = 100
-    self.Size = 100
+    self.Size = 10
     self.ChunkSize = 300
     self.nBiomes = 3
 
@@ -48,7 +48,7 @@ function Map:Generate()
     return self.Chunks
 end
 
-function Map:SpawnObject(perimeter, object)
+function Map:SpawnObject(object, perimeter)
     if type(perimeter) == "number" then
         local realSize = self.Size * self.ChunkSize
         perimeter = {realSize/2 - perimeter/2, realSize/2 + perimeter/2, realSize/2 - perimeter/2, realSize/2 + perimeter/2}
@@ -56,6 +56,8 @@ function Map:SpawnObject(perimeter, object)
     
     local x = math.random(perimeter[1], perimeter[2])
     local y = math.random(perimeter[3], perimeter[4])
+
+    print(x, y)
 
     object.X = x
     object.Y = y

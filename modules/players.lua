@@ -16,6 +16,8 @@ local function init(g)
     localPlayer.Controlling:SetImage("assets/tanks/tank"..math.random(1, 4)..".png")
 
     cam.Target = localPlayer.Controlling
+
+    game.Paths.LocalPlayer = localPlayer
 end
 
 return {init = init}

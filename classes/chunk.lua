@@ -16,6 +16,11 @@ function Chunk.new(x, y, size)
     self.X = self.Xnum * self.ChunkSize
     self.Y = self.Ynum * self.ChunkSize
 
+    self.Object.X = self.X
+    self.Object.Y = self.Y
+    self.Object.Width = self.ChunkSize
+    self.Object.Height = self.ChunkSize
+
     self.Object.Function = function()
         self:Render()
     end
