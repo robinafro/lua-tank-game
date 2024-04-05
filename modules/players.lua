@@ -13,13 +13,7 @@ local function init(g)
     game.ObjectService:SetCamera(cam)
     game.ObjectService:Add(localPlayer.Controlling)
 
-    do
-        -- print(os.time())
-        -- math.randomseed(os.time())
-        -- game.RunService:Wait(1)
-        -- math.randomseed(os.time())
-        localPlayer.Controlling:SetImage("assets/tanks/tank"..math.random(1, 4)..".png")
-    end
+    localPlayer.Controlling:SetImage("assets/tanks/tank"..math.random(1, 4)..".png")
 end
 
 return {init = init}
