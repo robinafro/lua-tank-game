@@ -12,7 +12,7 @@ function Chunk.new(x, y)
     self.X = x
     self.Y = y
 
-    self.Size = 60
+    self.Size = 100
 
     self.Loaded = true
 
