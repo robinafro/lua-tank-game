@@ -9,6 +9,7 @@ function Object.new(fnc)
         Y = 0,
         Width = 0,
         Height = 0,
+        Rotation = 0,
         ZIndex = 0,
         Color = {1, 1, 1, 1},
         Function = fnc,
@@ -22,6 +23,10 @@ end
 
 function Object:SetImage(image)
     self.Image = love.graphics.newImage(image)
+end
+
+function Object:GetBoundingBox()
+    return self.X, self.Y, self.Width, self.Height
 end
 
 return Object
