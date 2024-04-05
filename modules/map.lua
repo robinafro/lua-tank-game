@@ -14,6 +14,6 @@ return {init = function(game)
         until game.Paths.LocalPlayer
     end
 
-    map:SpawnObject(game.Paths.LocalPlayer.Controlling, 500)
+    -- map:SpawnObject(game.Paths.LocalPlayer.Controlling, 500)
     game.Paths.LocalPlayer.Camera:SetPosition(game.Paths.LocalPlayer.Controlling.X, game.Paths.LocalPlayer.Controlling.Y)
 end}
