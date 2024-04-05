@@ -8,7 +8,6 @@ function Map.new()
     
     self.Density = 100
     self.Size = 100
-    -- self.Size = 16
     self.nBiomes = 3
 
     self.Chunks = {}
@@ -57,13 +56,5 @@ function Map:PrepareToRender(callback)
         end
     end
 end
-
--- function Map:Render()
---     for x, row in pairs(self.Chunks) do
---         for y, chunk in pairs(row) do
---             chunk:Render()
---         end
---     end
--- end
 
 return Map
