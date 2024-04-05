@@ -39,6 +39,8 @@ function RunService:Delay(seconds, func)
 end
 
 function RunService:Wait(seconds)
+    if not seconds then seconds = 0 end
+    
     local start = love.timer.getTime()
     local co = coroutine.running()
     local id
