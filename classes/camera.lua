@@ -35,12 +35,10 @@ function Camera:Render(renderables, dt)
         self:MoveTo(self.Target.X, self.Target.Y)
     end
 
-    local r = 0
     for _, renderable in ipairs(renderables) do
         local distanceFromCenter = math.sqrt(math.abs(renderable.X - (self.X + love.graphics.getWidth() / 2)) ^ 2 + math.abs(renderable.Y - (self.Y + love.graphics.getHeight() / 2)) ^ 2)
 
         if distanceFromCenter < self.RenderDistance or renderable.AlwaysVisible == true then
-            r = r + 1
             love.graphics.setColor(unpack(renderable.Color or {1, 1, 1, 1}))
 
             love.graphics.push()
@@ -59,8 +57,6 @@ function Camera:Render(renderables, dt)
             love.graphics.pop()
         end
     end
-
-    print(r)
 end
 
 return Camera

@@ -21,7 +21,6 @@ function Chunk.new(x, y)
 end
 
 function Chunk:Render()
-    print("Rendering chunk at " .. self.Xnum .. ", " .. self.Ynum)
     if self.Image == nil then
         return
     end
