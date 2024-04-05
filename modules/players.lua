@@ -15,9 +15,7 @@ local function init(g)
 
     localPlayer.Controlling:SetImage("assets/tanks/tank"..math.random(1, 4)..".png")
 
-    game.RunService:Connect("RenderStepped", function(dt)
-        cam:MoveTo(localPlayer.Controlling.X, localPlayer.Controlling.Y)
-    end)
+    cam.Target = localPlayer.Controlling
 end
 
 return {init = init}

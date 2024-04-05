@@ -8,6 +8,7 @@ function Camera.new()
     self.Y = 0
 
     self.MaxTweenSpeed = 2
+    self.Target = nil
 
     return self
 end
@@ -26,6 +27,10 @@ function Camera:MoveTo(x, y)
 end
 
 function Camera:Render(renderables, dt)
+    if self.Target then
+        self:MoveTo(self.Target.X, self.Target.Y)
+    end
+    
     for _, renderable in ipairs(renderables) do
         love.graphics.setColor(unpack(renderable.Color or {1, 1, 1, 1}))
 
