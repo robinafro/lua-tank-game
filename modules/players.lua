@@ -15,6 +15,17 @@ local function init(g)
 
     localPlayer.Controlling:SetImage("assets/tanks/tank"..math.random(1, 4)..".png")
 
+    local tankCollider = require("classes.collider").new()
+    tankCollider.Object = localPlayer.Controlling
+
+    if not game.Paths.Colliders then
+        game.Paths.Colliders = {}
+    end
+
+    table.insert(game.Paths.Colliders, tankCollider)
+
+    game.RunService:Connect("Stepped", tankCollider:Collide(game.Paths.Colliders))
+
     cam.Target = localPlayer.Controlling
 
     game.Paths.LocalPlayer = localPlayer
