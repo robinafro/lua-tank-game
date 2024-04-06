@@ -1,3 +1,5 @@
+SAT = require("lib.sat")
+
 Collider = {}
 Collider.__index = Collider
 
@@ -39,9 +41,8 @@ function Collider:Collides(collider)
     return false
 end
 
-function Collider:CheckCollision(collider)
+function Collider:CheckCollisionAABB(collider)
     if self.Object and collider.Object then
-        print(self.Object.Width, self.Object.Height, self.Object.Rotation)
         local selfX, selfY, selfWidth, selfHeight = self.Object:GetBoundingBox()
         local colliderX, colliderY, colliderWidth, colliderHeight = collider.Object:GetBoundingBox()
 
@@ -49,47 +50,81 @@ function Collider:CheckCollision(collider)
                selfX + selfWidth > colliderX and
                selfY < colliderY + colliderHeight and
                selfY + selfHeight > colliderY
-    else
-        print("Object is nil")
     end
 
     return false
 end
 
-function Collider:ComputeCollision(collider)
-    -- Change the X and Y objects' postions so that they no longer collide
-    local selfX, selfY, selfWidth, selfHeight = self.Object:GetBoundingBox()
-    local colliderX, colliderY, colliderWidth, colliderHeight = collider.Object:GetBoundingBox()
+function Collider:CheckCollisionSAT(collider)
+    if self.Object and collider.Object then
+        local selfX, selfY, selfWidth, selfHeight = self.Object:GetBoundingBox()
+        local colliderX, colliderY, colliderWidth, colliderHeight = collider.Object:GetBoundingBox()
 
-    local selfCenterX = selfX + selfWidth / 2
-    local selfCenterY = selfY + selfHeight / 2
+        local selfPoints = {
+            {x = selfX, y = selfY},
+            {x = selfX + selfWidth, y = selfY},
+            {x = selfX + selfWidth, y = selfY + selfHeight},
+            {x = selfX, y = selfY + selfHeight}
+        }
 
-    local colliderCenterX = colliderX + colliderWidth / 2
-    local colliderCenterY = colliderY + colliderHeight / 2
+        local colliderPoints = {
+            {x = colliderX, y = colliderY},
+            {x = colliderX + colliderWidth, y = colliderY},
+            {x = colliderX + colliderWidth, y = colliderY + colliderHeight},
+            {x = colliderX, y = colliderY + colliderHeight}
+        }
 
-    local selfDistanceX = selfCenterX - colliderCenterX
-    local selfDistanceY = selfCenterY - colliderCenterY
+        local selfCenterX = selfX + selfWidth / 2
+        local selfCenterY = selfY + selfHeight / 2
 
-    local selfHalfWidth = selfWidth / 2
-    local selfHalfHeight = selfHeight / 2
+        local colliderCenterX = colliderX + colliderWidth / 2
+        local colliderCenterY = colliderY + colliderHeight / 2
 
-    local colliderHalfWidth = colliderWidth / 2
-    local colliderHalfHeight = colliderHeight / 2
+        local selfHalfWidth = selfWidth / 2
+        local selfHalfHeight = selfHeight / 2
 
-    local overlapX = selfHalfWidth + colliderHalfWidth - math.abs(selfDistanceX)
-    local overlapY = selfHalfHeight + colliderHalfHeight - math.abs(selfDistanceY)
+        local colliderHalfWidth = colliderWidth / 2
+        local colliderHalfHeight = colliderHeight / 2
 
-    if overlapX < overlapY then
-        if selfDistanceX > 0 then
-            self.Object.X = self.Object.X + overlapX
-        else
-            self.Object.X = self.Object.X - overlapX
+        -- Apply rotation to self points
+        local selfRotation = math.rad(self.Object.Rotation or 0)
+        for i, point in ipairs(selfPoints) do
+            local rotatedX = selfX + (point.x - selfCenterX) * math.cos(selfRotation) - (point.y - selfCenterY) * math.sin(selfRotation)
+            local rotatedY = selfY + (point.x - selfCenterX) * math.sin(selfRotation) + (point.y - selfCenterY) * math.cos(selfRotation)
+            selfPoints[i].x = rotatedX + selfHalfWidth
+            selfPoints[i].y = rotatedY + selfHalfHeight
         end
-    else
-        if selfDistanceY > 0 then
-            self.Object.Y = self.Object.Y + overlapY
-        else
-            self.Object.Y = self.Object.Y - overlapY
+
+        -- Apply rotation to collider points
+        local colliderRotation = math.rad(collider.Object.Rotation or 0)
+        for i, point in ipairs(colliderPoints) do
+            local rotatedX = colliderX + (point.x - colliderCenterX) * math.cos(colliderRotation) - (point.y - colliderCenterY) * math.sin(colliderRotation)
+            local rotatedY = colliderY + (point.x - colliderCenterX) * math.sin(colliderRotation) + (point.y - colliderCenterY) * math.cos(colliderRotation)
+            colliderPoints[i].x = rotatedX + colliderHalfWidth
+            colliderPoints[i].y = rotatedY + colliderHalfHeight
+        end
+
+
+        return SAT.Collide(selfPoints, colliderPoints)
+    end
+end
+
+function Collider:ComputeCollision(collider, min_penetration_axis, overlap)
+    -- Move the objects so that they no longer collide
+    if min_penetration_axis and overlap then
+        local penetrationVector = {
+            x = min_penetration_axis.x * overlap,
+            y = min_penetration_axis.y * overlap
+        }
+
+        if not self.Static then
+            self.Object.X = self.Object.X + penetrationVector.x
+            self.Object.Y = self.Object.Y + penetrationVector.y
+        end
+
+        if not collider.Static then
+            collider.Object.X = collider.Object.X - penetrationVector.x
+            collider.Object.Y = collider.Object.Y - penetrationVector.y
         end
     end
 end
@@ -99,12 +134,13 @@ function Collider:Collide(colliders)
         print("-------")
         for _, collider in ipairs(colliders) do
             if collider ~= self then
-                if self:Collides(collider) and self:CheckCollision(collider) then
-                    -- self:ComputeCollision(collider)
-                    collider.Object.Color = {1, 0, 0, 1}
+                local min_penetration_axis, overlap = self:CheckCollisionSAT(collider) 
+                if self:Collides(collider) and min_penetration_axis then
+                    self:ComputeCollision(collider, min_penetration_axis, overlap)
+                    -- collider.Object.Color = {1, 0, 0, 1}
                     print("Collides")
                 else
-                    collider.Object.Color = {1, 1, 1, 1}
+                    -- collider.Object.Color = {1, 1, 1, 1}
                     print("Doesn't collide")
                 end
             end
