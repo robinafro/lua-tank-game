@@ -76,6 +76,7 @@ function Map:Generate(game)
         collider.CollisionName = "wall"
         collider.CollisionFilterType = "Include"
         collider.CollisionFilter = {"*"}
+        collider.MaxDistance = self.Size * self.ChunkSize
 
         game.ObjectService:Add(wall)
         
