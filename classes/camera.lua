@@ -4,7 +4,7 @@ Camera.__index = Camera
 function Camera.new()
     local self = setmetatable({}, Camera)
 
-    self.RenderDistanceScreenMultiplier = 1
+    self.RenderDistanceScreenMultiplier = 0.7
 
     self.X = 0
     self.Y = 0
@@ -13,7 +13,6 @@ function Camera.new()
 
     self.Target = nil
     self.TargetPosition = {X = 0, Y = 0}
-    self.TargetZoneRadiusPercentage = 0.0
 
     return self
 end
@@ -35,20 +34,15 @@ function Camera:Render(renderables, dt)
     self.RenderDistance = math.max(love.graphics.getWidth(), love.graphics.getHeight()) * self.RenderDistanceScreenMultiplier
 
     if self.Target then
-        local distance = math.sqrt(math.abs((self.Target.X + self.Target.Width / 2) - (self.X + love.graphics.getWidth() / 2)) ^ 2 + math.abs((self.Target.Y + self.Target.Height / 2) - (self.Y + love.graphics.getHeight() / 2)) ^ 2)
-        local maxDistance = self.TargetZoneRadiusPercentage / 2 * math.max(love.graphics.getWidth(), love.graphics.getHeight())
-
-        if distance > maxDistance then
-            self.TargetPosition.X = self.Target.X
-            self.TargetPosition.Y = self.Target.Y
-        end
+        self.TargetPosition.X = self.Target.X
+        self.TargetPosition.Y = self.Target.Y
 
         self:MoveTo(self.TargetPosition.X, self.TargetPosition.Y)
     end
 
     for _, renderable in ipairs(renderables) do
-        local distanceFromCenter = math.sqrt(math.abs((renderable.X + renderable.Width / 2) - (self.X + love.graphics.getWidth() / 2)) ^ 2 + math.abs((renderable.Y + renderable.Height / 2) - (self.Y + love.graphics.getHeight() / 2)) ^ 2)
-        
+        local distanceFromCenter = math.min(math.abs(self.X - (renderable.X + renderable.Width / 2)), math.abs(self.Y - (renderable.Y + renderable.Height / 2)))
+
         if distanceFromCenter < self.RenderDistance or renderable.AlwaysVisible == true then
             love.graphics.setColor(unpack(renderable.Color or {1, 1, 1, 1}))
 
