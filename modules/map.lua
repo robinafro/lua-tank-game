@@ -1,10 +1,25 @@
+Map, Structure = require("classes.map"), require("classes.structure")
+
+CHUNK_SIZE = 300
+STRUCTURES = 30
+
 return {init = function(game)
-    map = require("classes.map").new()
+    game.Paths.ChunkSize = CHUNK_SIZE
+    game.Paths.Structures = STRUCTURES
+
+    --// Generate map
+    map = Map.new(game.Paths.ChunkSize)
 
     for x, row in pairs(map:Generate(game)) do
         for y, chunk in pairs(row) do
             game.ObjectService:Add(chunk.Object)
         end
+    end
+
+    --// Generate structures
+    for i = 1, game.Paths.Structures do
+        local structure = Structure.new(game, Structure.ChooseRandom())
+        map:SpawnStructureAtRandomPosition(structure)
     end
 
     game.Paths.Map = map

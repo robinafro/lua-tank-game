@@ -3,12 +3,12 @@ Object = require("classes.object")
 Map = {}
 Map.__index = Map
 
-function Map.new()
+function Map.new(chunkSize)
     local self = setmetatable(Object.new(), {__index = Map})
     
     self.Density = 100
-    self.Size = 10
-    self.ChunkSize = 300
+    self.Size = 50
+    self.ChunkSize = chunkSize or 300
     self.nBiomes = 3
 
     self.Chunks = {}
@@ -83,6 +83,18 @@ function Map:Generate(game)
     end
 
     return self.Chunks
+end
+
+function Map:SpawnStructureAtRandomPosition(structure)
+    local x = math.random(1, self.Size - 1)
+    local y = math.random(1, self.Size - 1)
+
+    structure.Position = {X = x, Y = y}
+    structure:Generate()
+
+    print("Structure spawned at ("..x..", "..y..")")
+
+    return structure
 end
 
 function Map:SpawnObject(object, perimeter)
