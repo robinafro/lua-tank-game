@@ -1,5 +1,7 @@
 function love.load()
     math.randomseed(os.time())
+
+    love.window.setFullscreen(true)
     
     local runservice = require("runservice")
     local objectservice = require("objectservice")
