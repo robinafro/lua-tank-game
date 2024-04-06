@@ -25,11 +25,17 @@ function Collider.new(paths)
     self.CollisionFilterType = {}
     self.CollisionFilter = {}
     self.CollisionName = ""
+    self.Paths = paths
 
     paths.Colliders = paths.Colliders or {}
     table.insert(paths.Colliders, self)
 
     return self
+end
+
+function Collider:Destroy()
+    self.Object = nil
+    self.Paths.Colliders[_find(self.Paths.Colliders, self)] = nil
 end
 
 function Collider:Collides(collider)
