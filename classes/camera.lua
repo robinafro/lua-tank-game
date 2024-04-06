@@ -57,12 +57,18 @@ function Camera:Render(renderables, dt)
 
             if renderable.Function then
                 renderable.Function(dt)
-            else    
+            else
+                love.graphics.push()
+                love.graphics.translate(renderable.X + renderable.Width / 2, renderable.Y + renderable.Height / 2)
+                love.graphics.rotate(math.rad(renderable.Rotation or 0))
+
                 if renderable.Image and renderable.Image ~= "" then
                     love.graphics.draw(renderable.Image, renderable.X, renderable.Y, 0, renderable.Width / renderable.Image:getWidth(), renderable.Height / renderable.Image:getHeight())
                 else
-                    love.graphics.rectangle("fill", renderable.X, renderable.Y, renderable.Width, renderable.Height)
+                    love.graphics.rectangle("fill", -renderable.Width / 2, -renderable.Height / 2, renderable.Width, renderable.Height)
                 end
+
+                love.graphics.pop()
             end
 
             love.graphics.pop()
