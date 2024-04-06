@@ -5,7 +5,7 @@ Collider.__index = Collider
 
 local function _find(t, v)
     for i, _v in ipairs(t) do
-        if _v == v then
+        if _v == v or _v == "*" then
             return i
         end
     end
@@ -151,17 +151,11 @@ function Collider:ComputeCollision(collider, min_penetration_axis, overlap)
 end
 
 function Collider:Collide(colliders, dt)
-    print("-------")
     for _, collider in ipairs(colliders) do
         if collider ~= self then
             local min_penetration_axis, overlap = self:CheckCollisionSAT(collider) 
             if self:Collides(collider) and min_penetration_axis then
                 self:ComputeCollision(collider, min_penetration_axis, overlap)
-                -- collider.Object.Color = {1, 0, 0, 1}
-                print("Collides")
-            else
-                -- collider.Object.Color = {1, 1, 1, 1}
-                print("Doesn't collide")
             end
         end
     end

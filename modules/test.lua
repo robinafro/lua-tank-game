@@ -13,9 +13,9 @@ return {init = function(game)
     local collider = require("classes.collider").new(game.Paths)
 
     collider.Static = false
-    collider.CollisionName = "default"
+    collider.CollisionName = "box"
     collider.CollisionFilterType = "Include"
-    collider.CollisionFilter = {"default", "player"}
+    collider.CollisionFilter = {"*"}
 
     collider.Object = object
 end}

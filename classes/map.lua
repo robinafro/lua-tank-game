@@ -17,7 +17,7 @@ function Map.new()
     return self
 end
 
-function Map:Generate()
+function Map:Generate(game)
     local seed = math.random(-2147483640, 2147483640)
 
     for x = 0, self.Size - 1 do
@@ -43,6 +43,43 @@ function Map:Generate()
 
             chunk:SetImage(self.Image)
         end
+    end
+
+    local object = require("classes.object")
+    local collider = require("classes.collider")
+
+    -- Spawn walls on the edges of the map
+    local width = 50
+    local length = self.Size * self.ChunkSize
+    local wallPositions = {
+        {0,0, length, width},
+        {0,0, width, length},
+        {0,length, length + width, width},
+        {length,0, width, length + width}
+    }
+
+    local walls = {}
+
+    for _, wallPosition in ipairs(wallPositions) do
+        local wall = object.new()
+        wall.X = wallPosition[1]
+        wall.Y = wallPosition[2]
+        wall.Width = wallPosition[3]
+        wall.Height = wallPosition[4]
+        wall.Color = {0.2, 0.2, 0.2, 1}
+        wall.ZIndex = 100
+        wall.AlwaysVisible = true
+
+        local collider = collider.new(game.Paths)
+        collider.Static = true
+        collider.Object = wall
+        collider.CollisionName = "wall"
+        collider.CollisionFilterType = "Include"
+        collider.CollisionFilter = {"*"}
+
+        game.ObjectService:Add(wall)
+        
+        table.insert(walls, {Wall = wall, Collider = collider})
     end
 
     return self.Chunks

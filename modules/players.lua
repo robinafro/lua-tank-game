@@ -18,9 +18,9 @@ local function init(g)
     local tankCollider = require("classes.collider").new(game.Paths)
     tankCollider.Object = localPlayer.Controlling
 
-    tankCollider.CollisionName = "default"
+    tankCollider.CollisionName = "localplayer"
     tankCollider.CollisionFilterType = "Include"
-    tankCollider.CollisionFilter = {"default", "player"}
+    tankCollider.CollisionFilter = {"*"}
 
     cam.Target = localPlayer.Controlling
 
