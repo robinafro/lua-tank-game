@@ -13,7 +13,9 @@ local function _find(t, v)
     return nil
 end
 
-function Collider.new()
+function Collider.new(paths)
+    if not paths then return end
+
     local self = setmetatable({}, Collider)
 
     self.Object = nil
@@ -23,6 +25,9 @@ function Collider.new()
     self.CollisionFilterType = {}
     self.CollisionFilter = {}
     self.CollisionName = ""
+
+    paths.Colliders = paths.Colliders or {}
+    table.insert(paths.Colliders, self)
 
     return self
 end
@@ -129,20 +134,18 @@ function Collider:ComputeCollision(collider, min_penetration_axis, overlap)
     end
 end
 
-function Collider:Collide(colliders)
-    return function(dt)
-        print("-------")
-        for _, collider in ipairs(colliders) do
-            if collider ~= self then
-                local min_penetration_axis, overlap = self:CheckCollisionSAT(collider) 
-                if self:Collides(collider) and min_penetration_axis then
-                    self:ComputeCollision(collider, min_penetration_axis, overlap)
-                    -- collider.Object.Color = {1, 0, 0, 1}
-                    print("Collides")
-                else
-                    -- collider.Object.Color = {1, 1, 1, 1}
-                    print("Doesn't collide")
-                end
+function Collider:Collide(colliders, dt)
+    print("-------")
+    for _, collider in ipairs(colliders) do
+        if collider ~= self then
+            local min_penetration_axis, overlap = self:CheckCollisionSAT(collider) 
+            if self:Collides(collider) and min_penetration_axis then
+                self:ComputeCollision(collider, min_penetration_axis, overlap)
+                -- collider.Object.Color = {1, 0, 0, 1}
+                print("Collides")
+            else
+                -- collider.Object.Color = {1, 1, 1, 1}
+                print("Doesn't collide")
             end
         end
     end
