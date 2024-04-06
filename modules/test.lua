@@ -3,8 +3,9 @@ return {init = function(game)
 
     object.X = 100
     object.Y = 100
-    object.Width = 1000
-    object.Height = 100
+    object.Width = 10
+    object.Height = 10
+    object.Rotation = 90
     object.ZIndex = 2
 
     game.ObjectService:Add(object)
