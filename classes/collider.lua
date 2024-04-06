@@ -1,4 +1,5 @@
 SAT = require("lib.sat")
+uuid = require("uuid")
 
 Collider = {}
 Collider.__index = Collider
@@ -19,7 +20,7 @@ function Collider.new(paths, object)
     local self = setmetatable({}, Collider)
 
     self.Object = object
-
+    self.ID = uuid()
     self.MaxDistance = 200
 
     self.Static = false
@@ -33,20 +34,18 @@ function Collider.new(paths, object)
     self.Paths = paths
 
     paths.Colliders = paths.Colliders or {}
-    table.insert(paths.Colliders, self)
+    paths.Colliders[self.ID] = self
 
     return self
 end
 
 function Collider:Destroy()
-    local i = _find(self.Paths.Colliders, self)
-
-    if not i then return end
-    
-    self.Paths.Colliders[i] = nil
+    self.Paths.Colliders[self.ID] = nil
+    self.Object = nil
 end
 
 function Collider:Collides(collider)
+
     local maxDistance = math.max(self.MaxDistance, collider.MaxDistance)
     local distance = math.min(math.abs(self.Object.X + self.Object.Width / 2 - collider.Object.X - collider.Object.Width / 2), math.abs(self.Object.Y + self.Object.Height / 2 - collider.Object.Y - collider.Object.Height / 2))
 
@@ -172,12 +171,8 @@ function Collider:ComputeCollision(collider, min_penetration_axis, overlap)
 end
 
 function Collider:Collide(colliders, dt)
-    if not self.Object then
-        self:Destroy()
-    end
-
-    for i, collider in ipairs(colliders) do
-        if collider.Object then
+    for i, collider in pairs(colliders) do
+        if collider.Object and self.Object then
             if collider ~= self then
                 if self:Collides(collider) then
                     local min_penetration_axis, overlap = self:CheckCollisionSAT(collider) 
@@ -186,14 +181,12 @@ function Collider:Collide(colliders, dt)
                             self.CollisionFunction(self, collider)
                         end
 
-                        if self.CanCollide and collider.CanCollide then
+                        if self.CanCollide and collider.CanCollide and colliders[i] ~= nil then
                             self:ComputeCollision(collider, min_penetration_axis, overlap)
                         end
                     end
                 end
             end
-        else
-            colliders[i] = nil
         end
     end
 end

@@ -4,7 +4,7 @@ return {init = function(game)
     end
 
     game.RunService:Connect("Stepped", function(dt)
-        for _, collider in ipairs(game.Paths.Colliders) do
+        for _, collider in pairs(game.Paths.Colliders) do
             collider:Collide(game.Paths.Colliders, dt)
         end
     end)
