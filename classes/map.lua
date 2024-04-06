@@ -92,8 +92,6 @@ function Map:SpawnStructureAtRandomPosition(structure)
     structure.Position = {X = x, Y = y}
     structure:Generate()
 
-    print("Structure spawned at ("..x..", "..y..")")
-
     return structure
 end
 
