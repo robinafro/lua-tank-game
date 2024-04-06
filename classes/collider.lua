@@ -131,6 +131,22 @@ function Collider:ComputeCollision(collider, min_penetration_axis, overlap)
             collider.Object.X = collider.Object.X - penetrationVector.x
             collider.Object.Y = collider.Object.Y - penetrationVector.y
         end
+
+        -- Adjust the positions of the objects to prevent them from overlapping
+        local separationVector = {
+            x = penetrationVector.x / 2,
+            y = penetrationVector.y / 2
+        }
+
+        if not self.Static then
+            self.Object.X = self.Object.X - separationVector.x
+            self.Object.Y = self.Object.Y - separationVector.y
+        end
+
+        if not collider.Static then
+            collider.Object.X = collider.Object.X + separationVector.x
+            collider.Object.Y = collider.Object.Y + separationVector.y
+        end
     end
 end
 
