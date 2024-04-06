@@ -13,20 +13,23 @@ local function _find(t, v)
     return nil
 end
 
-function Collider.new(paths)
+function Collider.new(paths, object)
     if not paths then return end
 
     local self = setmetatable({}, Collider)
 
-    self.Object = nil
+    self.Object = object
 
     self.MaxDistance = 200
 
     self.Static = false
     self.CanCollide = true
+    self.CanTouch = true
     self.CollisionFilterType = {}
     self.CollisionFilter = {}
     self.CollisionName = ""
+    self.CollisionFunction = nil
+
     self.Paths = paths
 
     paths.Colliders = paths.Colliders or {}
@@ -36,8 +39,11 @@ function Collider.new(paths)
 end
 
 function Collider:Destroy()
-    self.Object = nil
-    self.Paths.Colliders[_find(self.Paths.Colliders, self)] = nil
+    local i = _find(self.Paths.Colliders, self)
+
+    if not i then return end
+    
+    self.Paths.Colliders[i] = nil
 end
 
 function Collider:Collides(collider)
@@ -48,7 +54,7 @@ function Collider:Collides(collider)
         return false
     end
 
-    if collider.CanCollide and self.CanCollide then
+    if (collider.CanCollide or collider.CanTouch) and (self.CanCollide or self.CanTouch) then
         if collider.CollisionFilterType == "Include" and _find(collider.CollisionFilter, self.CollisionName)
         or collider.CollisionFilterType == "Exclude" and not _find(collider.CollisionFilter, self.CollisionName) then
             if self.CollisionFilterType == "Include" and _find(self.CollisionFilter, collider.CollisionName)
@@ -166,14 +172,28 @@ function Collider:ComputeCollision(collider, min_penetration_axis, overlap)
 end
 
 function Collider:Collide(colliders, dt)
-    for _, collider in ipairs(colliders) do
-        if collider ~= self then
-            if self:Collides(collider) then
-                local min_penetration_axis, overlap = self:CheckCollisionSAT(collider) 
-                if min_penetration_axis then
-                    self:ComputeCollision(collider, min_penetration_axis, overlap)
+    if not self.Object then
+        self:Destroy()
+    end
+
+    for i, collider in ipairs(colliders) do
+        if collider.Object then
+            if collider ~= self then
+                if self:Collides(collider) then
+                    local min_penetration_axis, overlap = self:CheckCollisionSAT(collider) 
+                    if min_penetration_axis then
+                        if self.CanTouch and collider.CanTouch and self.CollisionFunction then
+                            self.CollisionFunction(self, collider)
+                        end
+
+                        if self.CanCollide and collider.CanCollide then
+                            self:ComputeCollision(collider, min_penetration_axis, overlap)
+                        end
+                    end
                 end
             end
+        else
+            colliders[i] = nil
         end
     end
 end

@@ -21,6 +21,10 @@ function Player:Update(dt)
 
     self.Controlling:Move(z, x)
     self.Controlling:Update(dt)
+
+    if love.keyboard.isDown("space") then
+        self.Controlling:Shoot()
+    end
 end
 
 return Player

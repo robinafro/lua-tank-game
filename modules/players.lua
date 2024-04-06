@@ -8,7 +8,7 @@ local function init(g)
 
     localPlayer:SetCamera(cam)
 
-    game.RunService:Connect("Stepped", localPlayer:Control(require("classes.tank").new()))
+    game.RunService:Connect("Stepped", localPlayer:Control(require("classes.tank").new(game)))
     
     game.ObjectService:SetCamera(cam)
     game.ObjectService:Add(localPlayer.Controlling)
