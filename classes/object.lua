@@ -13,6 +13,8 @@ function Object.new(fnc)
         ZIndex = 0,
         Color = {1, 1, 1, 1},
         Function = fnc,
+        HUD = false,
+        AlwaysVisible = false,
         Image = ""
     }, Object)
 

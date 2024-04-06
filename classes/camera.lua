@@ -48,13 +48,16 @@ function Camera:Render(renderables, dt)
 
     for _, renderable in ipairs(renderables) do
         local distanceFromCenter = math.sqrt(math.abs((renderable.X + renderable.Width / 2) - (self.X + love.graphics.getWidth() / 2)) ^ 2 + math.abs((renderable.Y + renderable.Height / 2) - (self.Y + love.graphics.getHeight() / 2)) ^ 2)
-
+        
         if distanceFromCenter < self.RenderDistance or renderable.AlwaysVisible == true then
             love.graphics.setColor(unpack(renderable.Color or {1, 1, 1, 1}))
 
             love.graphics.push()
-            love.graphics.translate(-self.X, -self.Y)
 
+            if not renderable.HUD then
+                love.graphics.translate(-self.X, -self.Y)
+            end
+            
             if renderable.Function then
                 renderable.Function(dt)
             else
