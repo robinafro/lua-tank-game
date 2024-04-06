@@ -21,7 +21,13 @@ function love.load()
 
         if module["init"] ~= nil then
             local co = coroutine.create(function()
-                module.init({RunService = RunService, ObjectService = ObjectService, Paths = paths})
+                local success, error = pcall(function()
+                    module.init({RunService = RunService, ObjectService = ObjectService, Paths = paths})
+                end)
+                
+                if not success then
+                    print(error)
+                end
             end)
 
             coroutine.resume(co)
