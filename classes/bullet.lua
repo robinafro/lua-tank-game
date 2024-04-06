@@ -56,7 +56,6 @@ function Bullet:Render()
 end
 
 function Bullet:Destroy()
-    for i, v in pairs(self.Game) do print(i, v) end
     self.Collider:Destroy()
     self.Game.ObjectService:Remove(self.id)
 end
