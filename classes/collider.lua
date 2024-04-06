@@ -20,6 +20,8 @@ function Collider.new(paths)
 
     self.Object = nil
 
+    self.MaxDistance = 200
+
     self.Static = false
     self.CanCollide = true
     self.CollisionFilterType = {}
@@ -39,6 +41,13 @@ function Collider:Destroy()
 end
 
 function Collider:Collides(collider)
+    local maxDistance = math.max(self.MaxDistance, collider.MaxDistance)
+    local distance = math.min(math.abs(self.Object.X + self.Object.Width / 2 - collider.Object.X - collider.Object.Width / 2), math.abs(self.Object.Y + self.Object.Height / 2 - collider.Object.Y - collider.Object.Height / 2))
+
+    if distance > maxDistance then
+        return false
+    end
+
     if collider.CanCollide and self.CanCollide then
         if collider.CollisionFilterType == "Include" and _find(collider.CollisionFilter, self.CollisionName)
         or collider.CollisionFilterType == "Exclude" and not _find(collider.CollisionFilter, self.CollisionName) then
@@ -159,9 +168,11 @@ end
 function Collider:Collide(colliders, dt)
     for _, collider in ipairs(colliders) do
         if collider ~= self then
-            local min_penetration_axis, overlap = self:CheckCollisionSAT(collider) 
-            if self:Collides(collider) and min_penetration_axis then
-                self:ComputeCollision(collider, min_penetration_axis, overlap)
+            if self:Collides(collider) then
+                local min_penetration_axis, overlap = self:CheckCollisionSAT(collider) 
+                if min_penetration_axis then
+                    self:ComputeCollision(collider, min_penetration_axis, overlap)
+                end
             end
         end
     end
