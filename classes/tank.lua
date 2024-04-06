@@ -24,8 +24,8 @@ function Tank.new(game)
 
     self.DefaultBulletForce = 500
     self.LastShot = 0
-    self.Firerate = 1
-    self.Ammo = 10
+    self.Firerate = 1000
+    self.Ammo = 1000000000000
     self.BulletForce = self.DefaultBulletForce
 
     self.Health = 100
@@ -66,7 +66,7 @@ function Tank:Update(dt)
 end
 
 function Tank:Shoot()
-    if self.Ammo > 0 and love.timer.getTime() - self.LastShot > self.Firerate then
+    if self.Ammo > 0 and love.timer.getTime() - self.LastShot > 1 / self.Firerate then
         self.Ammo = self.Ammo - 1
         self.LastShot = love.timer.getTime()
        
