@@ -18,6 +18,8 @@ function Bullet.new(x, y, rot, game)
     self.ZIndex = 3
     self.AlwaysVisible = true
 
+    self.Image = love.graphics.newImage("assets/objects/bullet.png")
+
     self.Collider = Collider.new(self.Game.Paths, self)
     self.Collider.CanCollide = false
     self.Collider.CollisionName = "bullet"
@@ -50,8 +52,8 @@ function Bullet:Render()
     love.graphics.push()
     love.graphics.translate(self.X, self.Y)
     love.graphics.rotate(self.Rotation)
-    love.graphics.setColor(1, 0, 0)
-    love.graphics.rectangle("fill", -self.Width / 2, -self.Height / 2, self.Width, self.Height)
+    love.graphics.setColor(1, 200 / 255, 100 / 255)
+    love.graphics.draw(self.Image, -self.Width / 2, -self.Height / 2, 0, self.Width / self.Image:getWidth(), self.Height / self.Image:getHeight())
     love.graphics.pop()
 end
 
