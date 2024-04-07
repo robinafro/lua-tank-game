@@ -1,6 +1,6 @@
 return {init = function(game)
     obj = require("classes.object").new(function(dt)
-        love.graphics.print("FPS: " .. math.floor(1 / dt), 7, love.graphics.getHeight() - 23)
+        love.graphics.print("FPS: " .. love.timer.getFPS(), 7, love.graphics.getHeight() - 23)
     end)
     
     obj.ZIndex = 1000
