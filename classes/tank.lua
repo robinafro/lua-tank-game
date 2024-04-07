@@ -4,6 +4,26 @@ Bullet = require("classes.bullet")
 local Tank = setmetatable({}, Object)
 Tank.__index = Tank
 
+function _clamp(val, min, max)
+    if val < min then
+        return min
+    elseif val > max then
+        return max
+    else
+        return val
+    end
+end
+
+function _sign(val)
+    if val < 0 then
+        return -1
+    elseif val > 0 then
+        return 1
+    else
+        return 0
+    end
+end
+
 function Tank.new(game)
     local self = setmetatable(Object.new(), Tank)
 
@@ -11,6 +31,10 @@ function Tank.new(game)
 
     self.ForwSpeed = 150
     self.RotSpeed = 2
+    self.ForwAccel = self.ForwSpeed * 10
+    self.RotAccel = self.RotSpeed * 10
+    self.RotDeccel = self.RotSpeed * 5
+    self.ForwDeccel = self.ForwSpeed * 2
     self.ForwVelocity = 0
     self.RotVelocity = 0
 
@@ -24,8 +48,9 @@ function Tank.new(game)
 
     self.MinSortInterval = 0.2
     self.DefaultBulletForce = 3000
+    self.RecoilMultiplier = 0.07
     self.LastShot = 0
-    self.Firerate = 5
+    self.Firerate = 10
     self.Ammo = 1000000000000
     self.BulletForce = self.DefaultBulletForce
 
@@ -58,8 +83,8 @@ function Tank:Render()
 end
 
 function Tank:Update(dt)
-    self.RotVelocity = self.Input.X * self.RotSpeed
-    self.ForwVelocity = self.Input.Z * self.ForwSpeed
+    self.RotVelocity = _clamp(self.RotVelocity + self.Input.X * self.RotAccel * dt - math.min(self.RotDeccel * dt * _sign(self.RotVelocity), math.abs(self.RotSpeed)), -self.RotSpeed, self.RotSpeed)
+    self.ForwVelocity = _clamp(self.ForwVelocity + self.Input.Z * self.ForwAccel * dt - math.min(self.ForwDeccel * dt * _sign(self.ForwVelocity), math.abs(self.ForwSpeed)), -self.ForwSpeed, self.ForwSpeed)
     self.Rotation = self.Rotation + self.RotVelocity * dt
 
     self.X = self.X + math.cos(self.Rotation) * self.ForwVelocity * dt
@@ -82,6 +107,8 @@ function Tank:Shoot()
         bullet.id = id
 
         bullet:Fire()
+
+        self.ForwVelocity = self.ForwVelocity - bullet.Force * self.RecoilMultiplier
 
         if self.Ammo == 0 then
             self.BulletForce = self.DefaultBulletForce
