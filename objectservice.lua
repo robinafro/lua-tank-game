@@ -38,8 +38,9 @@ function ObjectService:Add(renderable, sort)
     
     local id = uuid()
 
-    self.Renderables[id] = renderable
+    renderable.ID = id
 
+    self.Renderables[id] = renderable
     table.insert(self.SortedRenderables, renderable)
 
     if sort then
@@ -52,8 +53,6 @@ end
 function ObjectService:Remove(id)
     if not self.Renderables[id] then return end
 
-    self.Renderables[id] = nil
-
     for i, renderable in ipairs(self.SortedRenderables) do
         if renderable.ID == id then
             table.remove(self.SortedRenderables, i)
@@ -61,6 +60,8 @@ function ObjectService:Remove(id)
         end
     end
 
+    self.Renderables[id] = nil
+    
     self:Sort()
 end
 
