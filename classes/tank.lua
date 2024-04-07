@@ -22,9 +22,10 @@ function Tank.new(game)
         X = 0
     }
 
+    self.MinSortInterval = 0.2
     self.DefaultBulletForce = 3000
     self.LastShot = 0
-    self.Firerate = 2
+    self.Firerate = 5
     self.Ammo = 1000000000000
     self.BulletForce = self.DefaultBulletForce
 
@@ -66,16 +67,17 @@ function Tank:Update(dt)
 end
 
 function Tank:Shoot()
-    if self.Ammo > 0 and love.timer.getTime() - self.LastShot > 1 / self.Firerate then
+    local time = love.timer.getTime()
+    if self.Ammo > 0 and time - self.LastShot > 1 / self.Firerate then
         self.Ammo = self.Ammo - 1
-        self.LastShot = love.timer.getTime()
+        self.LastShot = time
        
         local bullet = Bullet.new(self.X + self.Width / 2, self.Y + self.Height / 2, self.Rotation, self.Game)
 
         bullet.Force = self.BulletForce
         bullet.Controller = self.Controller
 
-        id = self.Game.ObjectService:Add(bullet)
+        id = self.Game.ObjectService:Add(bullet, time - self.LastShot < self.MinSortInterval)
 
         bullet.id = id
 
