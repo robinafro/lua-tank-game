@@ -22,7 +22,7 @@ function Tank.new(game)
         X = 0
     }
 
-    self.DefaultBulletForce = 500
+    self.DefaultBulletForce = 3000
     self.LastShot = 0
     self.Firerate = 2
     self.Ammo = 1000000000000
