@@ -7,6 +7,7 @@ function Map.new(chunkSize)
     local self = setmetatable(Object.new(), {__index = Map})
     
     self.Density = 0.02
+    self.Density = 0.04
     self.Size = 100
     self.ChunkSize = chunkSize or 300
     self.nBiomes = 3
