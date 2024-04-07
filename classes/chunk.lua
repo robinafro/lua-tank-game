@@ -34,7 +34,7 @@ function Chunk:Render()
     end
     
     love.graphics.setColor(self.Color)
-    love.graphics.draw(self.Image, self.Xnum * self.ChunkSize, self.Ynum * self.ChunkSize)
+    love.graphics.draw(self.Image, self.Xnum * self.ChunkSize, self.Ynum * self.ChunkSize, 0, self.ChunkSize / self.Image:getWidth(), self.ChunkSize / self.Image:getHeight())
 end
 
 function Chunk:SetImage(image)
