@@ -24,6 +24,15 @@ function _sign(val)
     end
 end
 
+--[[
+    Some info about tank mechanics
+
+    - Tank has a subtle acceleration/decceleration to both forward and rotation speeds
+    - When shooting, tank has a recoil effect that affects both forward and rotation speeds
+    - The recoil effect is proportional to the bullet force
+    - The rotation of the recoil effect is random, but is greatly reduced when the tank is moving backwards
+]]
+
 function Tank.new(game)
     local self = setmetatable(Object.new(), Tank)
 
@@ -49,8 +58,9 @@ function Tank.new(game)
     self.MinSortInterval = 0.2
     self.DefaultBulletForce = 3000
     self.RecoilMultiplier = 0.07
+    self.RecoilRotationMultiplier = 5
     self.LastShot = 0
-    self.Firerate = 10
+    self.Firerate = 2
     self.Ammo = 1000000000000
     self.BulletForce = self.DefaultBulletForce
 
@@ -108,6 +118,7 @@ function Tank:Shoot()
 
         bullet:Fire()
 
+        self.RotVelocity = self.RotVelocity + bullet.Force * self.RecoilRotationMultiplier * (math.random() - 0.5) * 2 * math.max(-self.ForwSpeed / 1000000, self.ForwVelocity / self.ForwSpeed)
         self.ForwVelocity = self.ForwVelocity - bullet.Force * self.RecoilMultiplier
 
         if self.Ammo == 0 then
