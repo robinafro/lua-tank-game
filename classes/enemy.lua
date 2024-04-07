@@ -32,7 +32,6 @@ function Enemy:Update(dt)
 
     local angleDifference = self.Controlling.Rotation - self.Target.Rotation
 
-
     local inputs = {
         vectorToTargetRelative.X,
         vectorToTargetRelative.Y,
@@ -44,11 +43,16 @@ function Enemy:Update(dt)
 
     local forward = outputs[1]
     local angular = outputs[2]
+    local shoot = outputs[3]
 
     print(forward)
 
     self.Controlling:Move(forward, angular, true)
     self.Controlling:Update(dt)
+
+    if shoot > 0.5 then
+        self.Controlling:Shoot()
+    end
 end
 
 return Enemy
