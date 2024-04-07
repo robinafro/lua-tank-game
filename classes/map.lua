@@ -8,8 +8,7 @@ function Map.new(chunkSize)
     
     -- self.Density = 0.15
     self.Density = 0.05
-    -- self.Size = 100
-    self.Size = 200
+    self.Size = 100
     self.ChunkSize = chunkSize or 300
     self.nBiomes = 3
 
