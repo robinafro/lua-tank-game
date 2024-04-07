@@ -6,13 +6,25 @@ function love.load()
     local runservice = require("runservice")
     local objectservice = require("objectservice")
 
+    local game = {
+        RunService = nil,
+        ObjectService = nil,
+        Paths = nil
+    }
+
     RunService = runservice.new()
     RunService:SetDelta()
 
-    ObjectService = objectservice.new()
+    game.RunService = RunService
+
+    ObjectService = objectservice.new(game)
+
+    game.ObjectService = ObjectService
 
     --// Set up path hierarchy
     local paths = {} --// This same table will be passed to all modules, so that they can interact by writing/reading objects.
+
+    game.Paths = paths
 
     --// Load modules
     local modules = love.filesystem.getDirectoryItems("modules")
@@ -39,8 +51,6 @@ end
 
 function love.draw()
     RunService:Trigger("RenderStepped")
-
-    ObjectService:Render(RunService:GetDelta("RenderStepped"))
 end
 
 function love.update(dt)
