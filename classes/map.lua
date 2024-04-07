@@ -6,8 +6,7 @@ Map.__index = Map
 function Map.new(chunkSize)
     local self = setmetatable(Object.new(), {__index = Map})
     
-    -- self.Density = 0.15
-    self.Density = 0.05
+    self.Density = 0.02
     self.Size = 100
     self.ChunkSize = chunkSize or 300
     self.nBiomes = 3
@@ -30,6 +29,7 @@ function Map:Generate(game)
 
             num = math.min(math.max(num, 0), self.nBiomes - 1)
             color = {num / self.nBiomes * 0.2, num / self.nBiomes * 0.7, num / self.nBiomes * 0.2, 1}
+            color = {(num ^ 2) / self.nBiomes * 0.4, math.max(num / self.nBiomes * 0.7, 0.15), (num ^ 3) / self.nBiomes * 0.12, 1}
             
             local chunk = require("classes.chunk").new(x, y, self.ChunkSize)
             

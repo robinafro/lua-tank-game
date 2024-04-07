@@ -1,6 +1,6 @@
 Map, Structure = require("classes.map"), require("classes.structure")
 
-CHUNK_SIZE = 150
+CHUNK_SIZE = 200
 STRUCTURES = 60
 
 return {init = function(game)
