@@ -8,6 +8,7 @@ function Bullet.new(x, y, rot, game)
     local self = setmetatable(Object.new(), Bullet)
 
     self.Game = game
+    self.Object = nil
 
     self.X = x
     self.Y = y
@@ -15,6 +16,8 @@ function Bullet.new(x, y, rot, game)
     self.Width = 25
     self.Height = 8
     self.Force = 1
+    self.Damage = 0
+    self.Whitelist = {}
     self.ZIndex = 3
     self.AlwaysVisible = true
 
@@ -26,8 +29,10 @@ function Bullet.new(x, y, rot, game)
     self.Collider.CollisionFilterType = "Exclude"
     self.Collider.CollisionFilter = {"localplayer", "bullet"}
     self.Collider.CollisionFunction = function(selfCollider, other)
-        if other.CollisionName == "enemyplayer" then
-            other:TakeDamage(10)
+        for _, v in ipairs(self.Whitelist) do
+            if other.CollisionName == v then
+                other.Object:TakeDamage(self.Damage)
+            end
         end
 
         self:Destroy()

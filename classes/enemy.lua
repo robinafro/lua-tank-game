@@ -8,9 +8,10 @@ function Enemy.new()
     local self = setmetatable({}, Enemy)
 
     self.NeuralNetwork = NeuralNetwork.new(5, 4, 3, 0.1)
+    self.Fitness = 0
     self.Target = nil
 
-    self.NeuralNetwork:printWeights()
+    -- self.NeuralNetwork:printWeights()
 
     return self
 end
@@ -48,13 +49,11 @@ function Enemy:Update(dt)
     local angular = outputs[2]
     local shoot = outputs[3]
 
-    print(forward)
-
     self.Controlling:Move(forward, angular)
     self.Controlling:Update(dt)
 
     if shoot > 0.5 then
-        self.Controlling:Shoot()
+        self.Controlling:Shoot({"localplayer"})
     end
 end
 

@@ -51,6 +51,10 @@ function ObjectService:Add(renderable, sort)
 end
 
 function ObjectService:Remove(id)
+    if type(id) == "table" then
+        id = id.ID
+    end
+
     if not self.Renderables[id] then return end
 
     for i, renderable in ipairs(self.SortedRenderables) do

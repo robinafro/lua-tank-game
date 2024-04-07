@@ -101,7 +101,7 @@ function Tank:Update(dt)
     self.Y = self.Y + math.sin(self.Rotation) * self.ForwVelocity * dt
 end
 
-function Tank:Shoot()
+function Tank:Shoot(enemies)
     local time = love.timer.getTime()
     if self.Ammo > 0 and time - self.LastShot > 1 / self.Firerate then
         self.Ammo = self.Ammo - 1
@@ -110,6 +110,8 @@ function Tank:Shoot()
         local bullet = Bullet.new(self.X + self.Width / 2, self.Y + self.Height / 2, self.Rotation, self.Game)
 
         bullet.Force = self.BulletForce
+        bullet.Damage = 100
+        bullet.Whitelist = enemies
         bullet.Controller = self.Controller
 
         id = self.Game.ObjectService:Add(bullet, time - self.LastShot < self.MinSortInterval)
@@ -132,6 +134,20 @@ function Tank:TakeDamage(dmg)
 
     if self.Health <= 0 and self.OnDeath then
         self.OnDeath()
+    end
+end
+
+function Tank:Destroy()
+    if self.ID == nil then return end
+
+    self.Game.ObjectService:Remove(self)
+
+    if self.Controller then
+        self.Controller:Destroy()
+    end
+
+    for i, v in pairs(self) do
+        self[i] = nil
     end
 end
 

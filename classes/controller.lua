@@ -24,4 +24,16 @@ function Controller:Update()
     print("Controller:Update() is a placeholder function. The class that inherits from Controller should override this function.")
 end
 
+function Controller:Destroy()
+    for i, v in pairs(self) do
+        if i ~= "Controlling" then
+            self[i] = nil
+        end
+    end
+
+    self.Controlling.Controller = nil
+    self.Controlling:Destroy()
+    self.Controlling = nil
+end
+
 return Controller
