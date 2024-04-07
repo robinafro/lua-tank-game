@@ -97,6 +97,15 @@ function Tank:Update(dt)
     self.ForwVelocity = _clamp(self.ForwVelocity + self.Input.Z * self.ForwAccel * dt - math.min(self.ForwDeccel * dt * _sign(self.ForwVelocity), math.abs(self.ForwSpeed)), -self.ForwSpeed, self.ForwSpeed)
     self.Rotation = self.Rotation + self.RotVelocity * dt
 
+    if self.Debug then
+        print("-----ROTATION-----")
+        print(self.Rotation)
+        print("-----ROTVELOCITY-----")
+        print(self.RotVelocity)
+        print("-----FORWVELOCITY-----")
+        print(self.ForwVelocity)
+    end
+
     self.X = self.X + math.cos(self.Rotation) * self.ForwVelocity * dt
     self.Y = self.Y + math.sin(self.Rotation) * self.ForwVelocity * dt
 end
@@ -135,7 +144,16 @@ function Tank:TakeDamage(dmg)
     end
 end
 
-function Tank:Move(z, x)
+function Tank:Move(z, x, debug)
+    if debug then
+        print("-----INPUTS-----")
+        print(z)
+        print(x)
+
+        self.Debug = true
+
+        print(self.X, self.Y, self.Rotation, self.ForwVelocity, self.RotVelocity)
+    end
     self.Input.Z = z
     self.Input.X = x
 end

@@ -25,6 +25,19 @@ local function init(g)
     cam.Target = localPlayer.Controlling
 
     game.Paths.LocalPlayer = localPlayer
+
+    local enemy = require("classes.enemy").new()
+
+    game.RunService:Connect("Stepped", enemy:Control(require("classes.tank").new(game)))
+
+    game.ObjectService:Add(enemy.Controlling)
+
+    enemy.Controlling.X = 1000
+    enemy.Controlling.Y = 1000
+    enemy.Target = localPlayer.Controlling
+
+    localPlayer.Controlling.X = 1050
+    localPlayer.Controlling.Y = 1050
 end
 
 return {init = init}
