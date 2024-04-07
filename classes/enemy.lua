@@ -7,8 +7,10 @@ Enemy.__index = Enemy
 function Enemy.new()
     local self = setmetatable({}, Enemy)
 
-    self.NeuralNetwork = NeuralNetwork.new(7, 0, 3, 0.1)
+    self.NeuralNetwork = NeuralNetwork.new(4, 4, 3, 0.1)
     self.Target = nil
+
+    self.NeuralNetwork:printWeights()
 
     return self
 end
@@ -18,35 +20,32 @@ function Enemy:Update(dt)
         return
     end
 
+    local vectorToTarget = {
+        X = self.Target.X - self.Controlling.X,
+        Y = self.Target.Y - self.Controlling.Y
+    }
+
+    local vectorToTargetRelative = {
+        X = vectorToTarget.X * math.cos(self.Controlling.Rotation) + vectorToTarget.Y * math.sin(self.Controlling.Rotation),
+        Y = vectorToTarget.Y * math.cos(self.Controlling.Rotation) - vectorToTarget.X * math.sin(self.Controlling.Rotation)
+    }
+
+    local angleDifference = self.Controlling.Rotation - self.Target.Rotation
+
+
     local inputs = {
-        self.Controlling.X,
-        self.Controlling.Y,
-        self.Controlling.Rotation,
-        self.Target.X,
-        self.Target.Y,
-        self.Target.Rotation,
+        vectorToTargetRelative.X,
+        vectorToTargetRelative.Y,
+        angleDifference,
         self.Target.ForwVelocity
     }
 
-    print("-----INPUTS-----")
-    for i = 1, #inputs do
-        print(inputs[i])
-    end
-
     local outputs = self.NeuralNetwork:feedforward(inputs)
-
-    print("-----OUTPUTS-----")
-    for i = 1, #outputs do
-        print(outputs[i])
-    end
 
     local forward = outputs[1]
     local angular = outputs[2]
 
-    print("-----FORWARD-----")
     print(forward)
-    print("-----ANGULAR-----")
-    print(angular)
 
     self.Controlling:Move(forward, angular, true)
     self.Controlling:Update(dt)

@@ -29,6 +29,22 @@ function NeuralNetwork.new(input_nodes, hidden_nodes, output_nodes, learning_rat
     return self
 end
 
+function NeuralNetwork:printWeights()
+    print("-----IH-----")
+    for i = 1, self.HiddenNodes do
+        for j = 1, self.InputNodes do
+            print(self.WeightsIH[i][j])
+        end
+    end
+
+    print("-----HO-----")
+    for i = 1, self.OutputNodes do
+        for j = 1, self.HiddenNodes do
+            print(self.WeightsHO[i][j])
+        end
+    end
+end
+
 function NeuralNetwork:feedforward(inputs)
     local hidden = {}
     local output = {}

@@ -96,7 +96,7 @@ function Tank:Update(dt)
     self.RotVelocity = _clamp(self.RotVelocity + self.Input.X * self.RotAccel * dt - math.min(self.RotDeccel * dt * _sign(self.RotVelocity), math.abs(self.RotSpeed)), -self.RotSpeed, self.RotSpeed)
     self.ForwVelocity = _clamp(self.ForwVelocity + self.Input.Z * self.ForwAccel * dt - math.min(self.ForwDeccel * dt * _sign(self.ForwVelocity), math.abs(self.ForwSpeed)), -self.ForwSpeed, self.ForwSpeed)
     self.Rotation = self.Rotation + self.RotVelocity * dt
-
+    
     self.X = self.X + math.cos(self.Rotation) * self.ForwVelocity * dt
     self.Y = self.Y + math.sin(self.Rotation) * self.ForwVelocity * dt
 end
