@@ -20,6 +20,7 @@ function Enemy.new()
 
     self.ShootDistance = 2000
     self.ShootAngle = 10
+    self.StandAngle = 45
     self.MinGoDistance = 100
 
     return self
@@ -84,11 +85,11 @@ function Enemy:Update(dt)
     local distance = math.sqrt((self.Target.X - self.Controlling.X) ^ 2 + (self.Target.Y - self.Controlling.Y) ^ 2)
     local angle = math.deg(math.atan2(vectorToTargetRelative.Y, vectorToTargetRelative.X))
 
-    if distance < self.ShootDistance and angle < self.ShootAngle then
+    if distance < self.ShootDistance and math.abs(angle) < self.ShootAngle then
         self.Controlling:Shoot({"localplayer"}, {"enemyplayer"})
     end
-    
-    self.Controlling:Move(distance > self.MinGoDistance and 1 or 0, math.min(math.max(angle, -1), 1))
+
+    self.Controlling:Move((distance > self.MinGoDistance and math.abs(angle) < self.StandAngle) and 1 or 0, math.min(math.max(angle, -1), 1))
     self.Controlling:Update(dt)
 end
 
