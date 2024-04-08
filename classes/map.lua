@@ -12,7 +12,7 @@ function Map.new(chunkSize)
     self.ChunkSize = chunkSize or 300
     self.nBiomes = 3
 
-    self.GridSize = 100
+    self.GridSize = 50 --// 100-50 is optimal, anything lower than that eats too much memory, higher is inaccurate
     self.Grid = {}
     self.Chunks = {}
     self.Structures = {}
