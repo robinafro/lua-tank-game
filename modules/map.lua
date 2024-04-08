@@ -2,7 +2,7 @@ Map, Structure = require("classes.map"), require("classes.structure")
 
 CHUNK_SIZE = 200
 -- STRUCTURES = 60
-STRUCTURES = 0
+STRUCTURES = 10
 
 return {init = function(game)
     game.Paths.ChunkSize = CHUNK_SIZE
@@ -32,4 +32,35 @@ return {init = function(game)
 
     map:SpawnObject(game.Paths.LocalPlayer.Controlling, 500)
     game.Paths.LocalPlayer.Camera:SetPosition(game.Paths.LocalPlayer.Controlling.X, game.Paths.LocalPlayer.Controlling.Y)
+
+    map:RefreshGrid()
+
+    local Object = require("classes.object")
+
+    -- game.RunService:Connect("RenderStepped", function()
+        for x = 0, map.Size * map.ChunkSize, map.GridSize do
+            for y = 0, map.Size * map.ChunkSize, map.GridSize do
+                local x, y = map:MapPointToCell(x, y)
+                local occupied = map:IsCellOccupiedAABB(x, y, true)
+
+                -- love.graphics.setColor(map:IsCellOccupied(x,y) and 1 or 0, (not map:IsCellOccupied(x,y)) and 1 or 0, 0, 0.5)
+                -- love.graphics.rectangle("fill", x * map.GridSize, y * map.GridSize, map.GridSize, map.GridSize)
+                -- print(x, y, map:IsCellOccupied(x,y))
+
+                local x, y = map:MapCellToPoint(x, y)
+
+                local object = Object.new()
+
+                object.X = x
+                object.Y = y
+                object.Width = map.GridSize
+                object.Height = map.GridSize
+                object.Color = {occupied and 1 or 0, (not occupied) and 1 or 0, 0, 0.2}
+                object.ZIndex = 100000
+
+                game.ObjectService:Add(object)
+            end
+        end
+    --     print("----")
+    -- end)
 end}

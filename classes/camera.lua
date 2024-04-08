@@ -52,7 +52,7 @@ function Camera:Render(renderables, dt)
                 love.graphics.translate(-self.X, -self.Y)
             end
             
-            if renderable.Function then
+            if renderable.Function and type(renderable.Function) == "function" then
                 renderable.Function(dt)
             else
                 love.graphics.push()

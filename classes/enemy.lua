@@ -1,10 +1,12 @@
 Controller = require("classes.controller")
 NeuralNetwork = require("classes.neuralnetwork")
 
+luafinding = require("lib.luafinding.luafinding")
+
 local Enemy = setmetatable({}, Controller)
 Enemy.__index = Enemy
 
-function Enemy.new()
+function Enemy.new(game)
     local self = setmetatable({}, Enemy)
 
     -- if not network then
@@ -14,6 +16,7 @@ function Enemy.new()
     -- end
     
     -- self.Fitness = 0
+    self.Game = game
     self.Target = nil
 
     -- self.NeuralNetwork:printWeights()

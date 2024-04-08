@@ -26,7 +26,7 @@ local function init(g)
 
     game.Paths.LocalPlayer = localPlayer
 
-    local enemy = require("classes.enemy").new()
+    local enemy = require("classes.enemy").new(game)
     local enemyTank = require("classes.tank").new(game)
     local enemyCollider = require("classes.collider").new(game.Paths)
 

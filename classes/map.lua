@@ -12,10 +12,13 @@ function Map.new(chunkSize)
     self.ChunkSize = chunkSize or 300
     self.nBiomes = 3
 
+    self.GridSize = 100
+    self.Grid = {}
     self.Chunks = {}
+    self.Structures = {}
     self.Image = love.graphics.newImage("assets/textures/grass.png")
 
-    self.Size = 4
+    self.Size = 16
 
     return self
 end
@@ -90,12 +93,68 @@ function Map:Generate(game)
     return self.Chunks
 end
 
+function Map:MapPointToCell(x, y)
+    return math.floor(x / self.GridSize), math.floor(y / self.GridSize)
+end
+
+function Map:MapCellToPoint(x, y)
+    return x * self.GridSize, y * self.GridSize
+end
+
+function Map:IsCellOccupied(x, y)
+    local x, y = self:MapPointToCell(x, y)
+
+    if self.Grid[x] ~= true then
+        return false
+    end
+
+    if self.Grid[x][y] ~= true then
+        return false
+    end
+
+    return true
+end
+
+function Map:IsCellOccupiedAABB(x, y, alreadyMapped)
+    if not alreadyMapped then
+        local x, y = self:MapPointToCell(x, y)
+    end
+    
+    local occupied = false
+
+    for _, structure in ipairs(self.Structures) do
+        for _, object in pairs(structure.Objects) do
+            if object.Object:CollidesWith(x * self.GridSize, y * self.GridSize, self.GridSize, self.GridSize) then
+                occupied = true
+                break
+            end
+        end
+    end
+
+    return occupied
+end
+
+function Map:RefreshGrid()
+    self.Grid = {}
+
+    for x = 0, self.Size * self.ChunkSize, self.GridSize do
+        for y = 0, self.Size * self.ChunkSize, self.GridSize do
+            local x, y = self:MapPointToCell(x, y)
+
+            self.Grid[x] = {}
+            self.Grid[x][y] = self:IsCellOccupiedAABB(x, y, true)
+        end
+    end
+end
+
 function Map:SpawnStructureAtRandomPosition(structure)
     local x = math.random(1, self.Size - 1)
     local y = math.random(1, self.Size - 1)
 
     structure.Position = {X = x, Y = y}
     structure:Generate()
+
+    table.insert(self.Structures, structure)
 
     return structure
 end
