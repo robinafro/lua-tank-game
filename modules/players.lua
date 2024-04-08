@@ -30,6 +30,9 @@ local function init(g)
     local enemyTank = require("classes.tank").new(game)
     local enemyCollider = require("classes.collider").new(game.Paths)
 
+    enemyTank.ForwSpeed = 100
+    enemyTank.RotSpeed = 1
+
     enemyCollider.Object = enemyTank
     enemyCollider.CollisionName = "enemyplayer"
     enemyCollider.CollisionFilterType = "Include"

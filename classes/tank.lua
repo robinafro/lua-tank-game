@@ -101,7 +101,7 @@ function Tank:Update(dt)
     self.Y = self.Y + math.sin(self.Rotation) * self.ForwVelocity * dt
 end
 
-function Tank:Shoot(enemies)
+function Tank:Shoot(enemies, friendlies)
     local time = love.timer.getTime()
     if self.Ammo > 0 and time - self.LastShot > 1 / self.Firerate then
         self.Ammo = self.Ammo - 1
@@ -112,13 +112,13 @@ function Tank:Shoot(enemies)
         bullet.Force = self.BulletForce
         bullet.Damage = 100
         bullet.Whitelist = enemies
+        bullet.Blacklist = friendlies
         bullet.Controller = self.Controller
 
-        id = self.Game.ObjectService:Add(bullet, time - self.LastShot < self.MinSortInterval)
-
-        bullet.id = id
-
         bullet:Fire()
+
+        self.Game.ObjectService:Add(bullet)
+        -- self.Game.ObjectService:Sort()
 
         self.RotVelocity = self.RotVelocity + bullet.Force * self.RecoilRotationMultiplier * (math.random() - 0.5) * 2 * math.max(-self.ForwSpeed / 1000000, self.ForwVelocity / self.ForwSpeed)
         self.ForwVelocity = self.ForwVelocity - bullet.Force * self.RecoilMultiplier
@@ -130,8 +130,6 @@ function Tank:Shoot(enemies)
         if self.OnFired then
             self.OnFired(bullet)
         end
-
-        self.Game.ObjectService:Sort()
     end
 end
 

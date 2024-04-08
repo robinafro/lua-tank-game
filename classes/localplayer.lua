@@ -23,7 +23,7 @@ function Player:Update(dt)
     self.Controlling:Update(dt)
 
     if love.keyboard.isDown("space") then
-        self.Controlling:Shoot({"enemyplayer"})
+        self.Controlling:Shoot({"enemyplayer"}, {"localplayer"})
     end
 end
 

@@ -35,7 +35,7 @@ function ObjectService:Add(renderable, sort)
     if not renderable then return end
     if not renderable.Function and (not renderable.X or not renderable.Y or not renderable.Width or not renderable.Height) then return end
     if not renderable.ZIndex then renderable.ZIndex = 0 end
-    
+
     local id = uuid()
 
     renderable.ID = id
@@ -46,7 +46,7 @@ function ObjectService:Add(renderable, sort)
     if sort then
         self:Sort()
     end
-    
+
     return id
 end
 
@@ -69,17 +69,7 @@ function ObjectService:Remove(id)
     self:Sort()
 end
 
-function ObjectService:Render(dt)
-    -- local sortedRenderables = {}; do
-    --     for _, renderable in pairs(self.Renderables) do
-    --         table.insert(sortedRenderables, renderable)
-    --     end
-    -- end
-
-    -- table.sort(sortedRenderables, function(a, b)
-    --     return a.ZIndex < b.ZIndex
-    -- end)
-    
+function ObjectService:Render(dt)    
     if self.Camera then
         self.Camera:Render(self.SortedRenderables, dt)
     end

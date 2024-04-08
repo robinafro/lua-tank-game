@@ -19,7 +19,8 @@ function Bullet.new(x, y, rot, game)
     self.Force = 1
     self.Damage = 0
     self.Whitelist = {}
-    self.ZIndex = 3
+    self.Blacklist = {}
+    self.ZIndex = 5000
     self.AlwaysVisible = true
 
     self.Image = love.graphics.newImage("assets/objects/bullet.png")
@@ -28,8 +29,14 @@ function Bullet.new(x, y, rot, game)
     self.Collider.CanCollide = false
     self.Collider.CollisionName = "bullet"
     self.Collider.CollisionFilterType = "Exclude"
-    self.Collider.CollisionFilter = {"localplayer", "bullet"}
+    self.Collider.CollisionFilter = {"bullet"}
     self.Collider.CollisionFunction = function(selfCollider, other)
+        for _, v in ipairs(self.Blacklist) do
+            if other.CollisionName == v then
+                return
+            end
+        end
+
         for _, v in ipairs(self.Whitelist) do
             if other.CollisionName == v then
                 other.Object:TakeDamage(self.Damage)
@@ -44,6 +51,7 @@ end
 
 function Bullet:Fire()
     self.Active = true
+    
     self.Function = function(dt)
         self:Update(dt)
         self:Render()
@@ -68,7 +76,7 @@ function Bullet:Destroy()
     self.Active = false
     
     self.Collider:Destroy()
-    self.Game.ObjectService:Remove(self.id)
+    self.Game.ObjectService:Remove(self)
 end
 
 return Bullet
