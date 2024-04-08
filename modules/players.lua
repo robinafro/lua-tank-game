@@ -36,8 +36,8 @@ local function init(g)
     -- enemy.Controlling.Y = 1000
     -- enemy.Target = localPlayer.Controlling
 
-    localPlayer.Controlling.X = 1050
-    localPlayer.Controlling.Y = 1050
+    localPlayer.Controlling.X = 600
+    localPlayer.Controlling.Y = 600
 
     local trainer = require("classes.trainer").new(game)
 

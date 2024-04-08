@@ -126,6 +126,12 @@ function Tank:Shoot(enemies)
         if self.Ammo == 0 then
             self.BulletForce = self.DefaultBulletForce
         end
+
+        if self.OnFired then
+            self.OnFired(bullet)
+        end
+
+        self.Game.ObjectService:Sort()
     end
 end
 

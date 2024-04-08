@@ -9,6 +9,7 @@ function Bullet.new(x, y, rot, game)
 
     self.Game = game
     self.Object = nil
+    self.Active = false
 
     self.X = x
     self.Y = y
@@ -42,6 +43,7 @@ function Bullet.new(x, y, rot, game)
 end
 
 function Bullet:Fire()
+    self.Active = true
     self.Function = function(dt)
         self:Update(dt)
         self:Render()
@@ -63,6 +65,8 @@ function Bullet:Render()
 end
 
 function Bullet:Destroy()
+    self.Active = false
+    
     self.Collider:Destroy()
     self.Game.ObjectService:Remove(self.id)
 end

@@ -1,7 +1,8 @@
 Map, Structure = require("classes.map"), require("classes.structure")
 
 CHUNK_SIZE = 200
-STRUCTURES = 60
+-- STRUCTURES = 60
+STRUCTURES = 0
 
 return {init = function(game)
     game.Paths.ChunkSize = CHUNK_SIZE

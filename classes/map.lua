@@ -15,6 +15,8 @@ function Map.new(chunkSize)
     self.Chunks = {}
     self.Image = love.graphics.newImage("assets/textures/grass.png")
 
+    self.Size = 4
+
     return self
 end
 
@@ -51,7 +53,7 @@ function Map:Generate(game)
     local collider = require("classes.collider")
 
     -- Spawn walls on the edges of the map
-    local width = 50
+    local width = 100
     local length = self.Size * self.ChunkSize
     local wallPositions = {
         {0,0, length, width},

@@ -4,10 +4,15 @@ NeuralNetwork = require("classes.neuralnetwork")
 local Enemy = setmetatable({}, Controller)
 Enemy.__index = Enemy
 
-function Enemy.new()
+function Enemy.new(network, mutrate)
     local self = setmetatable({}, Enemy)
 
-    self.NeuralNetwork = NeuralNetwork.new(5, 4, 3, 0.1)
+    if not network then
+        self.NeuralNetwork = NeuralNetwork.new(4, 4, 3, 0.1)
+    else
+        self.NeuralNetwork = network:mutate(mutrate or 0.1)
+    end
+    
     self.Fitness = 0
     self.Target = nil
 
@@ -38,7 +43,7 @@ function Enemy:Update(dt)
     local inputs = {
         vectorToTargetRelative.X,
         vectorToTargetRelative.Y,
-        distance,
+        -- distance,
         angleDifference,
         self.Target.ForwVelocity
     }
