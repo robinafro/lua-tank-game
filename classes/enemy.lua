@@ -1,6 +1,4 @@
 Controller = require("classes.controller")
-NeuralNetwork = require("classes.neuralnetwork")
-
 luafinding = require("lib.luafinding.luafinding")
 
 local Enemy = setmetatable({}, Controller)
@@ -9,17 +7,8 @@ Enemy.__index = Enemy
 function Enemy.new(game)
     local self = setmetatable({}, Enemy)
 
-    -- if not network then
-    --     self.NeuralNetwork = NeuralNetwork.new(4, 4, 3, 0.1)
-    -- else
-    --     self.NeuralNetwork = network:mutate(mutrate or 0.1)
-    -- end
-    
-    -- self.Fitness = 0
     self.Game = game
     self.Target = nil
-
-    -- self.NeuralNetwork:printWeights()
 
     self.ShootDistance = 2000
     self.ShootAngle = 10
@@ -27,47 +16,6 @@ function Enemy.new(game)
     self.MinGoDistance = 100
 
     return self
-end
-
-function Enemy:UpdateAI(dt)
-    if not self.Target then
-        return
-    end
-
-    local vectorToTarget = {
-        X = self.Target.X - self.Controlling.X,
-        Y = self.Target.Y - self.Controlling.Y
-    }
-
-    local vectorToTargetRelative = {
-        X = vectorToTarget.X * math.cos(self.Controlling.Rotation) + vectorToTarget.Y * math.sin(self.Controlling.Rotation),
-        Y = vectorToTarget.Y * math.cos(self.Controlling.Rotation) - vectorToTarget.X * math.sin(self.Controlling.Rotation)
-    }
-
-    local distance = math.sqrt(vectorToTarget.X ^ 2 + vectorToTarget.Y ^ 2)
-
-    local angleDifference = self.Controlling.Rotation - self.Target.Rotation
-
-    local inputs = {
-        vectorToTargetRelative.X,
-        vectorToTargetRelative.Y,
-        -- distance,
-        angleDifference,
-        self.Target.ForwVelocity
-    }
-
-    local outputs = self.NeuralNetwork:feedforward(inputs)
-
-    local forward = outputs[1]
-    local angular = outputs[2]
-    local shoot = outputs[3]
-
-    self.Controlling:Move(forward, angular)
-    self.Controlling:Update(dt)
-
-    if shoot > 0.5 then
-        self.Controlling:Shoot({"localplayer"})
-    end
 end
 
 function Enemy:Update(dt)

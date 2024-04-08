@@ -18,7 +18,7 @@ function Map.new(chunkSize)
     self.Structures = {}
     self.Image = love.graphics.newImage("assets/textures/grass.png")
 
-    self.Size = 16
+    -- self.Size = 16
 
     return self
 end

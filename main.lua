@@ -1,4 +1,4 @@
-function love.load()
+function love.load(args)
     math.randomseed(os.time())
 
     love.window.setFullscreen(true)
@@ -21,8 +21,15 @@ function love.load()
 
     game.ObjectService = ObjectService
 
+    local debug = false
+    for _, arg in ipairs(args) do
+        if arg == "--debug" then
+            debug = true
+        end
+    end
+
     --// Set up path hierarchy
-    local paths = {} --// This same table will be passed to all modules, so that they can interact by writing/reading objects.
+    local paths = {Debug = debug} --// This same table will be passed to all modules, so that they can interact by writing/reading objects.
 
     game.Paths = paths
 

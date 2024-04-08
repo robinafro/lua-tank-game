@@ -1,15 +1,23 @@
 Map, Structure = require("classes.map"), require("classes.structure")
 
 CHUNK_SIZE = 200
--- STRUCTURES = 60
-STRUCTURES = 10
+MAP_SIZE = 100
+STRUCTURES = 60
 
 return {init = function(game)
+    if game.Paths.Debug then
+        STRUCTURES = 10
+        MAP_SIZE = 10
+    end
+
+    game.Paths.MapSize = MAP_SIZE
     game.Paths.ChunkSize = CHUNK_SIZE
     game.Paths.Structures = STRUCTURES
 
     --// Generate map
     map = Map.new(game.Paths.ChunkSize)
+
+    map.Size = game.Paths.MapSize
 
     for x, row in pairs(map:Generate(game)) do
         for y, chunk in pairs(row) do
@@ -35,17 +43,13 @@ return {init = function(game)
 
     map:RefreshGrid()
 
-    local Object = require("classes.object")
+    if game.Paths.Debug then
+        local Object = require("classes.object")
 
-    -- game.RunService:Connect("RenderStepped", function()
         for x = 0, map.Size * map.ChunkSize, map.GridSize do
             for y = 0, map.Size * map.ChunkSize, map.GridSize do
                 local x, y = map:MapPointToCell(x, y)
                 local occupied = map:IsCellOccupiedAABB(x, y, true)
-
-                -- love.graphics.setColor(map:IsCellOccupied(x,y) and 1 or 0, (not map:IsCellOccupied(x,y)) and 1 or 0, 0, 0.5)
-                -- love.graphics.rectangle("fill", x * map.GridSize, y * map.GridSize, map.GridSize, map.GridSize)
-                -- print(x, y, map:IsCellOccupied(x,y))
 
                 local x, y = map:MapCellToPoint(x, y)
 
@@ -61,6 +65,5 @@ return {init = function(game)
                 game.ObjectService:Add(object)
             end
         end
-    --     print("----")
-    -- end)
+    end
 end}
