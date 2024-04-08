@@ -73,6 +73,8 @@ function Tank.new(game)
     self.Controller = nil
 
     self.ZIndex = 100
+
+    self:SetImage("assets/tanks/tank"..math.random(1, 4)..".png")
     
     return self
 end

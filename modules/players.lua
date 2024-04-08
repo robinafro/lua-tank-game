@@ -13,8 +13,6 @@ local function init(g)
     game.ObjectService:SetCamera(cam)
     game.ObjectService:Add(localPlayer.Controlling)
 
-    localPlayer.Controlling:SetImage("assets/tanks/tank"..math.random(1, 4)..".png")
-
     local tankCollider = require("classes.collider").new(game.Paths)
     tankCollider.Object = localPlayer.Controlling
 
