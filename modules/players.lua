@@ -26,22 +26,29 @@ local function init(g)
 
     game.Paths.LocalPlayer = localPlayer
 
-    -- local enemy = require("classes.enemy").new()
+    local enemy = require("classes.enemy").new()
+    local enemyTank = require("classes.tank").new(game)
+    local enemyCollider = require("classes.collider").new(game.Paths)
 
-    -- game.RunService:Connect("Stepped", enemy:Control(require("classes.tank").new(game)))
+    enemyCollider.Object = enemyTank
+    enemyCollider.CollisionName = "enemyplayer"
+    enemyCollider.CollisionFilterType = "Include"
+    enemyCollider.CollisionFilter = {"*"}
 
-    -- game.ObjectService:Add(enemy.Controlling)
+    game.RunService:Connect("Stepped", enemy:Control(enemyTank))
 
-    -- enemy.Controlling.X = 1000
-    -- enemy.Controlling.Y = 1000
-    -- enemy.Target = localPlayer.Controlling
+    game.ObjectService:Add(enemy.Controlling)
 
-    localPlayer.Controlling.X = 600
-    localPlayer.Controlling.Y = 600
+    enemy.Controlling.X = 500
+    enemy.Controlling.Y = 500
+    enemy.Target = localPlayer.Controlling
 
-    local trainer = require("classes.trainer").new(game)
+    -- localPlayer.Controlling.X = 600
+    -- localPlayer.Controlling.Y = 600
 
-    trainer:NewGeneration()
+    -- local trainer = require("classes.trainer").new(game)
+
+    -- trainer:NewGeneration()
 end
 
 return {init = init}

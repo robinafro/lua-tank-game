@@ -71,7 +71,7 @@ function Map:Generate(game)
         wall.Width = wallPosition[3]
         wall.Height = wallPosition[4]
         wall.Color = {0.2, 0.2, 0.2, 1}
-        wall.ZIndex = 100
+        wall.ZIndex = 10
         wall.AlwaysVisible = true
 
         local collider = collider.new(game.Paths)

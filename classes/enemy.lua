@@ -21,7 +21,7 @@ function Enemy.new(network, mutrate)
     return self
 end
 
-function Enemy:Update(dt)
+function Enemy:UpdateAI(dt)
     if not self.Target then
         return
     end
@@ -60,6 +60,11 @@ function Enemy:Update(dt)
     if shoot > 0.5 then
         self.Controlling:Shoot({"localplayer"})
     end
+end
+
+function Enemy:Update(dt)
+    self.Controlling:Move(1, 0)
+    self.Controlling:Update(dt)
 end
 
 return Enemy

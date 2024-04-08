@@ -14,9 +14,9 @@ function ObjectService.new(game)
     self.Camera = nil
 
     game.RunService:Connect("RenderStepped", function()
-        if os.clock() - self.LastSorted > self.SortInterval then
+        if os.time() - self.LastSorted > self.SortInterval then
             self:Sort()
-            self.LastSorted = os.clock()
+            self.LastSorted = os.time()
         end
 
         self:Render(game.RunService:GetDelta("RenderStepped"))
