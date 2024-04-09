@@ -2,8 +2,8 @@ Map, Structure = require("classes.map"), require("classes.structure")
 
 CHUNK_SIZE = 200
 CHUNK_SIZE = 250
-MAP_SIZE = 70
-STRUCTURES = 60
+MAP_SIZE = 80
+STRUCTURES = 80
 
 return {init = function(game)
     if game.Paths.Debug then
