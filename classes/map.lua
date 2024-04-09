@@ -152,7 +152,7 @@ function Map:RefreshGrid(aroundX, aroundY)
                             self.Grid[x] = {}
                         end
 
-                        self.Grid[x][y] = self:IsCellOccupiedAABB(x, y, true)
+                        self.Grid[x][y] = not self:IsCellOccupiedAABB(x, y, true)
                     end
                 end
             end

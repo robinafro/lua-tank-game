@@ -88,7 +88,7 @@ function Luafinding:CalculatePath()
                     end
                 end
             end
-
+            
             closed[currentId] = true
 
             local adjacents = fetchOpenAdjacentNodes( current, positionOpenCheck )

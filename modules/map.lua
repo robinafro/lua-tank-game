@@ -50,13 +50,13 @@ return {init = function(game)
                 local object = Object.new()
 
                 object.Function = function()
-                    local occupied = map:IsCellOccupied(x, y)
+                    local free = map:IsCellOccupied(x, y)
 
                     object.X = x
                     object.Y = y
                     object.Width = map.GridSize
                     object.Height = map.GridSize
-                    object.Color = {occupied and 1 or 0, (not occupied) and 1 or 0, 0, 0.2}
+                    object.Color = {free and 0 or 1, (not free) and 0 or 1, 0, 0.2}
                     object.ZIndex = 100000
 
                     love.graphics.setColor(unpack(object.Color))
