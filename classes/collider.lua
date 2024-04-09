@@ -45,13 +45,14 @@ function Collider:Destroy()
 end
 
 function Collider:Collides(collider)
-
     local maxDistance = math.max(self.MaxDistance, collider.MaxDistance)
     local distance = math.min(math.abs(self.Object.X + self.Object.Width / 2 - collider.Object.X - collider.Object.Width / 2), math.abs(self.Object.Y + self.Object.Height / 2 - collider.Object.Y - collider.Object.Height / 2))
 
     if distance > maxDistance then
         return false
     end
+
+    if self.Static and collider.Static then return false end
 
     if (collider.CanCollide or collider.CanTouch) and (self.CanCollide or self.CanTouch) then
         if collider.CollisionFilterType == "Include" and _find(collider.CollisionFilter, self.CollisionName)

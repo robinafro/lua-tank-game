@@ -13,6 +13,9 @@ function Map.new(chunkSize)
     self.nBiomes = 3
 
     self.GridSize = 50 --// 100-50 is optimal, anything lower than that eats too much memory, higher is inaccurate
+    self.RefreshGridMaxDistance = 1000
+    self.LastRefreshed = 0
+    self.RefreshDebounce = 10
     self.Grid = {}
     self.Chunks = {}
     self.Structures = {}
@@ -103,15 +106,15 @@ end
 
 function Map:IsCellOccupied(x, y)
     local x, y = self:MapPointToCell(x, y)
-
-    if self.Grid[x] ~= true then
+    
+    if not self.Grid[x] then
         return false
     end
-
+    
     if self.Grid[x][y] ~= true then
         return false
     end
-
+    
     return true
 end
 
@@ -134,15 +137,27 @@ function Map:IsCellOccupiedAABB(x, y, alreadyMapped)
     return occupied
 end
 
-function Map:RefreshGrid()
-    self.Grid = {}
+function Map:RefreshGrid(aroundX, aroundY)
+    if os.time() - self.LastRefreshed >= self.RefreshDebounce then
+        print("refresh")
+        print(os.time())
+        self.LastRefreshed = os.time()
+        self.Grid = {}
 
-    for x = 0, self.Size * self.ChunkSize, self.GridSize do
-        for y = 0, self.Size * self.ChunkSize, self.GridSize do
-            local x, y = self:MapPointToCell(x, y)
+        for x = 0, self.Size * self.ChunkSize, self.GridSize do
+            if math.abs(x - (aroundX or x)) < self.RefreshGridMaxDistance then
+                for y = 0, self.Size * self.ChunkSize, self.GridSize do
+                    if math.abs(y - (aroundY or y)) < self.RefreshGridMaxDistance then
+                        local x, y = self:MapPointToCell(x, y)
 
-            self.Grid[x] = {}
-            self.Grid[x][y] = self:IsCellOccupiedAABB(x, y, true)
+                        if not self.Grid[x] then
+                            self.Grid[x] = {}
+                        end
+
+                        self.Grid[x][y] = self:IsCellOccupiedAABB(x, y, true)
+                    end
+                end
+            end
         end
     end
 end

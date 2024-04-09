@@ -70,8 +70,8 @@ function Structure:Generate()
         collider.Static = true
         collider.Object = obj
         collider.CollisionName = "structure"
-        collider.CollisionFilterType = "Include"
-        collider.CollisionFilter = {"*"}
+        collider.CollisionFilterType = "Exclude"
+        collider.CollisionFilter = {"structure"}
 
         local id = self.Game.ObjectService:Add(obj)
         self.Objects[id] = {Object = obj, Collider = collider}
