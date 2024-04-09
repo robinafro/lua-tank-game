@@ -16,7 +16,7 @@ return {init = function(game)
     game.Paths.Structures = STRUCTURES
 
     --// Generate map
-    map = Map.new(game.Paths.ChunkSize)
+    map = Map.new(game, game.Paths.ChunkSize)
 
     map.Size = game.Paths.MapSize
 

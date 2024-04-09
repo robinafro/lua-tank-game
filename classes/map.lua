@@ -3,9 +3,10 @@ Object = require("classes.object")
 Map = {}
 Map.__index = Map
 
-function Map.new(chunkSize)
+function Map.new(game, chunkSize)
     local self = setmetatable(Object.new(), {__index = Map})
     
+    self.Game = game
     self.Density = 0.02
     self.Density = 0.04
     self.Size = 100
@@ -14,14 +15,13 @@ function Map.new(chunkSize)
 
     self.GridSize = 50 --// 100-50 is optimal, anything lower than that eats too much memory, higher is inaccurate
     self.RefreshGridMaxDistance = 1000
+    self.LazyGridRefresh = true
     self.LastRefreshed = 0
-    self.RefreshDebounce = 10
+    self.RefreshDebounce = 1
     self.Grid = {}
     self.Chunks = {}
     self.Structures = {}
     self.Image = love.graphics.newImage("assets/textures/grass.png")
-
-    -- self.Size = 16
 
     return self
 end
@@ -129,7 +129,7 @@ function Map:IsCellOccupiedAABB(x, y, alreadyMapped)
         for _, object in pairs(structure.Objects) do
             if object.Object:CollidesWith(x * self.GridSize, y * self.GridSize, self.GridSize, self.GridSize) then
                 occupied = true
-                break
+                return occupied
             end
         end
     end
@@ -140,7 +140,10 @@ end
 function Map:RefreshGrid(aroundX, aroundY)
     if os.time() - self.LastRefreshed >= self.RefreshDebounce then
         self.LastRefreshed = os.time()
-        self.Grid = {}
+
+        if not self.LazyGridRefresh then
+            self.Grid = {}
+        end
 
         for x = 0, self.Size * self.ChunkSize, self.GridSize do
             if math.abs(x - (aroundX or x)) < self.RefreshGridMaxDistance then
@@ -154,6 +157,10 @@ function Map:RefreshGrid(aroundX, aroundY)
 
                         self.Grid[x][y] = not self:IsCellOccupiedAABB(x, y, true)
                     end
+                end
+
+                if self.LazyGridRefresh then
+                    self.Game.RunService:Wait()
                 end
             end
         end
