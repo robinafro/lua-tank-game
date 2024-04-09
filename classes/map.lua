@@ -139,8 +139,6 @@ end
 
 function Map:RefreshGrid(aroundX, aroundY)
     if os.time() - self.LastRefreshed >= self.RefreshDebounce then
-        print("refresh")
-        print(os.time())
         self.LastRefreshed = os.time()
         self.Grid = {}
 

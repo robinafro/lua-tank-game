@@ -1,7 +1,7 @@
 Map, Structure = require("classes.map"), require("classes.structure")
 
 CHUNK_SIZE = 200
-CHUNK_SIZE = 300
+CHUNK_SIZE = 250
 MAP_SIZE = 70
 STRUCTURES = 60
 
