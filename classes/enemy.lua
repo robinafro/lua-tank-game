@@ -34,27 +34,23 @@ function Enemy:Update(dt)
         self:UpdatePath()
     end
 
-    if not self.TargetPath then
-        return
-    end
+    if self.TargetPath then
+        local waypoint = self.TargetPath[self.CurrentWaypoint]
 
-    local waypoint = self.TargetPath[self.CurrentWaypoint]
+        if waypoint then
+            self:MoveTowards(self.TargetPath[self.CurrentWaypoint])
+            
+            if self:Reached(self.TargetPath[self.CurrentWaypoint]) then
+                self.CurrentWaypoint = self.CurrentWaypoint + 1
+            end
 
-    if not waypoint then
-        return
-    end
-
-    self:MoveTowards(self.TargetPath[self.CurrentWaypoint])
-    
-    if self:Reached(self.TargetPath[self.CurrentWaypoint]) then
-        self.CurrentWaypoint = self.CurrentWaypoint + 1
+            if self.Game.Paths.Debug then
+                self:VisualizePath()
+            end
+        end
     end
 
     self.Controlling:Update(dt)
-
-    if self.Game.Paths.Debug then
-        self:VisualizePath()
-    end
 end
 
 function Enemy:Reached(waypoint)
