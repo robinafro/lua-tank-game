@@ -135,8 +135,8 @@ function Enemy:VisualizePath()
                 Y = waypointMappedY,
                 Width = 15,
                 Height = 15,
-                Color = {1, 0.2, 0, 0.8},
-                ZIndex = 100000
+                Color = {1, 0.03 * i, 0, 0.8},
+                ZIndex = 200000
             }
 
             id = self.Game.ObjectService:Add(obj)
