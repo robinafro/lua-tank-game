@@ -137,9 +137,9 @@ function Enemy:VisualizePath()
             local obj = {
                 X = waypointMappedX,
                 Y = waypointMappedY,
-                Width = 5,
-                Height = 5,
-                Color = {1, 0.2, 0, 0.5},
+                Width = 15,
+                Height = 15,
+                Color = {1, 0.2, 0, 0.8},
                 ZIndex = 100000
             }
 

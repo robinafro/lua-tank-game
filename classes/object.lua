@@ -31,9 +31,11 @@ function Object:GetBoundingBox()
     return self.X, self.Y, self.Width, self.Height
 end
 
-function Object:CollidesWith(x, y, width, height)
+function Object:CollidesWith(x, y, width, height, objectAddX, objectAddY)
     local x1, y1, w1, h1 = self:GetBoundingBox()
     local x2, y2, w2, h2 = x, y, width, height
+
+    x1, y1, w1, h1 = x1 - (objectAddX or 0) / 2, y1 - (objectAddY or 0) / 2, w1 + (objectAddX or 0), h1 + (objectAddY or 0)
 
     return x1 < x2 + w2 and
            x2 < x1 + w1 and

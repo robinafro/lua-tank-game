@@ -14,6 +14,7 @@ function Map.new(game, chunkSize)
     self.nBiomes = 3
 
     self.GridSize = 50 --// 100-50 is optimal, anything lower than that eats too much memory, higher is inaccurate
+    self.AgentRadius = 25
     self.RefreshGridMaxDistance = 1000
     self.LazyGridRefresh = true
     self.LastRefreshed = 0
@@ -127,7 +128,7 @@ function Map:IsCellOccupiedAABB(x, y, alreadyMapped)
 
     for _, structure in ipairs(self.Structures) do
         for _, object in pairs(structure.Objects) do
-            if object.Object:CollidesWith(x * self.GridSize, y * self.GridSize, self.GridSize, self.GridSize) then
+            if object.Object:CollidesWith(x * self.GridSize, y * self.GridSize, self.GridSize, self.GridSize, self.AgentRadius, self.AgentRadius) then
                 occupied = true
                 return occupied
             end
