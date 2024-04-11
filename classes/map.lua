@@ -105,8 +105,10 @@ function Map:MapCellToPoint(x, y)
     return x * self.GridSize, y * self.GridSize
 end
 
-function Map:IsCellOccupied(x, y)
-    local x, y = self:MapPointToCell(x, y)
+function Map:IsCellOccupied(x, y, alreadyMapped)
+    if not alreadyMapped then
+        x, y = self:MapPointToCell(x, y)
+    end
     
     if not self.Grid[x] then
         return false

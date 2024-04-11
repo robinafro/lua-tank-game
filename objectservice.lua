@@ -21,7 +21,7 @@ function ObjectService.new(game)
 
         self:Render(game.RunService:GetDelta("RenderStepped"))
     end)
-    
+
     return self
 end
 
@@ -45,6 +45,10 @@ function ObjectService:Add(renderable, sort)
 
     if sort then
         self:Sort()
+    end
+
+    if not self.Game.Paths.Renderables then
+        self.Game.Paths.Renderables = self.Renderables
     end
 
     return id

@@ -55,6 +55,7 @@ function Structure:Generate()
         obj.Height = object.Height * self.CellSize
         obj.Color = object.Color or self.DefaultColor
         obj.ZIndex = object.ZIndex or self.DefaultZIndex
+        obj.RaycastName = "structure"
 
         local img = object.Image
 

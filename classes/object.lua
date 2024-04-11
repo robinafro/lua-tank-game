@@ -15,7 +15,8 @@ function Object.new(fnc)
         Function = fnc,
         HUD = false,
         AlwaysVisible = false,
-        Image = ""
+        Image = "",
+        RaycastName = "",
     }, Object)
 
     self.__index = self

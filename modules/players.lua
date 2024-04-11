@@ -24,32 +24,29 @@ local function init(g)
 
     game.Paths.LocalPlayer = localPlayer
 
-    local enemy = require("classes.enemy").new(game)
-    local enemyTank = require("classes.tank").new(game)
-    local enemyCollider = require("classes.collider").new(game.Paths)
+    for i = 1,50 do
+        local enemy = require("classes.enemy").new(game)
+        local enemyTank = require("classes.tank").new(game)
+        local enemyCollider = require("classes.collider").new(game.Paths)
 
-    enemyTank.ForwSpeed = 100
-    enemyTank.RotSpeed = 1
+        enemyTank.ForwSpeed = 100
+        enemyTank.RotSpeed = 1
 
-    enemyCollider.Object = enemyTank
-    enemyCollider.CollisionName = "enemyplayer"
-    enemyCollider.CollisionFilterType = "Include"
-    enemyCollider.CollisionFilter = {"*"}
+        enemyCollider.Object = enemyTank
+        enemyCollider.CollisionName = "enemyplayer"
+        enemyCollider.CollisionFilterType = "Include"
+        enemyCollider.CollisionFilter = {"*"}
 
-    game.RunService:Connect("Stepped", enemy:Control(enemyTank))
+        game.RunService:Connect("Stepped", enemy:Control(enemyTank))
 
-    game.ObjectService:Add(enemy.Controlling)
+        game.ObjectService:Add(enemy.Controlling)
 
-    enemy.Controlling.X = 500
-    enemy.Controlling.Y = 500
-    enemy.Target = localPlayer.Controlling
+        enemy.Controlling.X = 500
+        enemy.Controlling.Y = 500
+        enemy.Target = localPlayer.Controlling
 
-    -- localPlayer.Controlling.X = 600
-    -- localPlayer.Controlling.Y = 600
-
-    -- local trainer = require("classes.trainer").new(game)
-
-    -- trainer:NewGeneration()
+        game.RunService:Wait(1 / 15)
+    end
 end
 
 return {init = init}

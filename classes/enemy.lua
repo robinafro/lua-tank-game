@@ -1,6 +1,7 @@
 Controller = require("classes.controller")
 luafinding = require("lib.luafinding.luafinding")
 vector = require("lib.luafinding.vector")
+raycast = require("lib.luafinding.raycast")
 
 local Enemy = setmetatable({}, Controller)
 Enemy.__index = Enemy
@@ -10,7 +11,7 @@ function Enemy.new(game)
 
     self.Game = game
     self.Target = nil
-    self.TargetPos = vector(0,0)
+    self.TargetPos = nil
     self.TargetPath = nil
     self.CurrentWaypoint = 1
     self.WaypointReachedDistance = 100
@@ -31,7 +32,10 @@ function Enemy:Update(dt)
 
     if os.time() - self.LastUpdatedPath >= self.UpdatePathDebounce then
         self.LastUpdatedPath = os.time()
-        self:UpdatePath()
+
+        coroutine.wrap(function()
+            self:UpdatePath()
+        end)()
     end
 
     if self.TargetPath then
@@ -89,14 +93,64 @@ function Enemy:DistanceTo(waypoint)
     return math.sqrt(dx * dx + dy * dy)
 end
 
+function Enemy:FindClosestReachablePoint(goalX, goalY)
+    local free = self.Game.Paths.Map:IsCellOccupied(goalX, goalY, true)
+
+    if free then
+        return vector(goalX, goalY)
+    end
+
+    local subdivisions = 40
+    local currentRadius = 0.5
+    local radiusStep = 0.5
+
+    local found = {}
+
+    while currentRadius < 4 do
+        for i = 1, subdivisions do
+            local angle = 2 * math.pi / subdivisions * i
+            local x = goalX + currentRadius * math.cos(angle)
+            local y = goalY + currentRadius * math.sin(angle)
+
+            if self.Game.Paths.Map:IsCellOccupied(x, y, true) then
+                local pointMappedX, pointMappedY = self.Game.Paths.Map:MapCellToPoint(x, y)
+                local goalMappedX, goalMappedY = self.Game.Paths.Map:MapCellToPoint(goalX, goalY)
+
+                local reachable = raycast(vector(goalMappedX, goalMappedY), vector(pointMappedX, pointMappedY), self.Game.Paths.Renderables, "structure")
+            
+                if reachable then
+                    table.insert(found, vector(x, y))
+                end
+            end
+        end
+
+        currentRadius = currentRadius + radiusStep
+    end
+
+    table.sort(found, function(a, b)
+        local distanceA = math.sqrt((goalX - a.x) ^ 2 + (goalY - a.y) ^ 2) + self:DistanceTo(a)
+        local distanceB = math.sqrt((goalX - b.x) ^ 2 + (goalY - b.y) ^ 2) + self:DistanceTo(b)
+        return distanceA < distanceB
+    end)
+
+    if #found > 0 then
+        return found[1]
+    else
+        return vector(goalX, goalY)
+    end
+end
+
 function Enemy:UpdatePath()
     local selfMappedX, selfMappedY = self.Game.Paths.Map:MapPointToCell(self.Controlling.X, self.Controlling.Y)
     local targetMappedX, targetMappedY = self.Game.Paths.Map:MapPointToCell(self.Target.X, self.Target.Y)
 
     local start = vector(selfMappedX, selfMappedY)
-    local goal = vector(targetMappedX, targetMappedY)
 
-    local path = luafinding(start, goal, self.Game.Paths.Map.Grid):GetPath()
+    local goal = self:FindClosestReachablePoint(targetMappedX, targetMappedY)-- or vector(targetMappedX, targetMappedY)
+
+    self.TargetPos = goal
+
+    local path = luafinding(start, self.TargetPos, self.Game.Paths.Map.Grid):GetPath()
     
     if path then
         local closestWaypointIndex = 1
@@ -117,7 +171,7 @@ function Enemy:UpdatePath()
 end
 
 function Enemy:VisualizePath()
-    if not self.TargetPath then
+    if not self.TargetPath or true then
         return
     end
 
