@@ -173,7 +173,7 @@ function Enemy:UpdatePath()
 end
 
 function Enemy:VisualizePath()
-    if not self.TargetPath or true then
+    if not self.TargetPath then
         return
     end
 
