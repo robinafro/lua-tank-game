@@ -1,8 +1,6 @@
 Object = require("classes.object")
 Collider = require("classes.collider")
 
-local MAX_DISTANCE_FOR_AABB = 9999999
-
 local raycast = {}
 
 function raycast:Initialize(game, filterType, filter)
@@ -43,24 +41,6 @@ function raycast:Compute(start, goal, objects, include)
     end
 
     local angle = math.deg(math.atan2(dy, dx))
-
-    -- local step = 20
-    -- local steps = distance / step
-    
-    -- for i = 1, steps do
-    --     local x = start.x + step * i * math.cos(angle)
-    --     local y = start.y + step * i * math.sin(angle)
-        
-    --     for _, object in pairs(objects) do
-    --         local distance = math.min((object.X - x), (object.Y - y))
-
-    --         if distance < MAX_DISTANCE_FOR_AABB then
-    --             if object.RaycastName == include and object:CollidesWith(x, y, 5, 5) then
-    --                 return false
-    --             end
-    --         end
-    --     end
-    -- end
 
     self.RaycastObject.Width = distance
     self.RaycastObject.Height = 5

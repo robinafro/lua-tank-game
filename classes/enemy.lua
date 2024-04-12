@@ -121,7 +121,6 @@ function Enemy:FindClosestReachablePoint(goalX, goalY)
                 local reachable = self.raycast:Compute(vector(goalMappedX, goalMappedY), vector(pointMappedX, pointMappedY), self.Game.Paths.Renderables, "structure")
             
                 if reachable then
-                    print("REACHABLE")
                     table.insert(found, vector(x, y))
                 end
             end
@@ -137,7 +136,6 @@ function Enemy:FindClosestReachablePoint(goalX, goalY)
     end)
 
     if #found > 0 then
-        print("Returning found")
         return found[1]
     else
         return vector(goalX, goalY)
@@ -155,7 +153,7 @@ function Enemy:UpdatePath()
     self.TargetPos = goal
 
     local path = luafinding(start, self.TargetPos, self.Game.Paths.Map.Grid):GetPath()
-    print(start, goal, path)
+    
     if path then
         local closestWaypointIndex = 1
         local closestWaypointDistance = self:DistanceTo(path[1])
@@ -175,7 +173,7 @@ function Enemy:UpdatePath()
 end
 
 function Enemy:VisualizePath()
-    if not self.TargetPath then
+    if not self.TargetPath or true then
         return
     end
 
