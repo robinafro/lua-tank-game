@@ -1,7 +1,6 @@
 Controller = require("classes.controller")
 luafinding = require("lib.luafinding.luafinding")
 vector = require("lib.luafinding.vector")
-raycast = require("lib.luafinding.raycast")
 
 local Enemy = setmetatable({}, Controller)
 Enemy.__index = Enemy
@@ -22,6 +21,9 @@ function Enemy.new(game)
     self.StandAngle = 45
     self.MinGoDistance = 100
 
+    self.raycast = require("lib.luafinding.raycast")
+    self.raycast:Initialize(self.Game, "Include", {"structure"})
+
     return self
 end
 
@@ -30,8 +32,8 @@ function Enemy:Update(dt)
         return
     end
 
-    if os.time() - self.LastUpdatedPath >= self.UpdatePathDebounce then
-        self.LastUpdatedPath = os.time()
+    if os.clock() - self.LastUpdatedPath >= self.UpdatePathDebounce then
+        self.LastUpdatedPath = os.clock()
 
         coroutine.wrap(function()
             self:UpdatePath()
@@ -116,9 +118,10 @@ function Enemy:FindClosestReachablePoint(goalX, goalY)
                 local pointMappedX, pointMappedY = self.Game.Paths.Map:MapCellToPoint(x, y)
                 local goalMappedX, goalMappedY = self.Game.Paths.Map:MapCellToPoint(goalX, goalY)
 
-                local reachable = raycast(vector(goalMappedX, goalMappedY), vector(pointMappedX, pointMappedY), self.Game.Paths.Renderables, "structure")
+                local reachable = self.raycast:Compute(vector(goalMappedX, goalMappedY), vector(pointMappedX, pointMappedY), self.Game.Paths.Renderables, "structure")
             
                 if reachable then
+                    print("REACHABLE")
                     table.insert(found, vector(x, y))
                 end
             end
@@ -134,6 +137,7 @@ function Enemy:FindClosestReachablePoint(goalX, goalY)
     end)
 
     if #found > 0 then
+        print("Returning found")
         return found[1]
     else
         return vector(goalX, goalY)
@@ -151,7 +155,7 @@ function Enemy:UpdatePath()
     self.TargetPos = goal
 
     local path = luafinding(start, self.TargetPos, self.Game.Paths.Map.Grid):GetPath()
-    
+    print(start, goal, path)
     if path then
         local closestWaypointIndex = 1
         local closestWaypointDistance = self:DistanceTo(path[1])
@@ -171,7 +175,7 @@ function Enemy:UpdatePath()
 end
 
 function Enemy:VisualizePath()
-    if not self.TargetPath or true then
+    if not self.TargetPath then
         return
     end
 

@@ -52,7 +52,7 @@ function Collider:Collides(collider)
         return false
     end
 
-    if self.Static and collider.Static then return false end
+    -- if self.Static and collider.Static then return false end
 
     if (collider.CanCollide or collider.CanTouch) and (self.CanCollide or self.CanTouch) then
         if collider.CollisionFilterType == "Include" and _find(collider.CollisionFilter, self.CollisionName)
@@ -171,7 +171,7 @@ function Collider:ComputeCollision(collider, min_penetration_axis, overlap)
     end
 end
 
-function Collider:Collide(colliders, dt)
+function Collider:Collide(colliders, debug)
     for i, collider in pairs(colliders) do
         if collider.Object and self.Object then
             if collider ~= self then

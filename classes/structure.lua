@@ -69,6 +69,7 @@ function Structure:Generate()
 
         local collider = Collider.new(self.Game.Paths)
         collider.Static = true
+        collider.CanTouch = true
         collider.Object = obj
         collider.CollisionName = "structure"
         collider.CollisionFilterType = "Exclude"
