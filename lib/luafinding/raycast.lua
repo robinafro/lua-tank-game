@@ -27,10 +27,6 @@ function raycast:Initialize(game, filterType, filter)
 end
 
 function raycast:Compute(start, goal, objects, include)
-    --//TODO: potom mozna to udelej SAT kolizema
-
-    -- Objects is a table of all objects, they all have .X, .Y, .Width, .Height
-
     local dx = goal.x - start.x
     local dy = goal.x - start.x
 
