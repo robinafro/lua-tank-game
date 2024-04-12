@@ -60,7 +60,7 @@ function Tank.new(game)
     self.RecoilMultiplier = 0.07
     self.RecoilRotationMultiplier = 5
     self.LastShot = 0
-    self.Firerate = 200
+    self.Firerate = 2
     self.Ammo = 1000000000000
     self.BulletForce = self.DefaultBulletForce
 
