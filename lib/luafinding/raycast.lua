@@ -13,6 +13,8 @@ function raycast:Initialize(game, filterType, filter)
         self.RaycastObject.Color = {1, 0, 0, 0.5}
         self.RaycastObject.ZIndex = 9999
         self.RaycastObject.AlwaysVisible = true
+    else
+        self.RaycastObject.Color = {0,0,0,0}
     end
 
     self.RaycastCollider = Collider.new(game.Paths, self.RaycastObject)

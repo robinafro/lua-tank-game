@@ -63,7 +63,7 @@ function Enemy:Update(dt)
         self.DefaultSpeed = self.Controlling.ForwSpeed
     end
     
-    self.Controlling.ForwSpeed = self.DefaultSpeed * distanceToTarget / self.SpeedUpDistance
+    self.Controlling.ForwSpeed = self.DefaultSpeed * math.max(distanceToTarget / self.SpeedUpDistance, 1)
     
     self.Controlling:Update(dt)
 end
