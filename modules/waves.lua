@@ -2,9 +2,11 @@ local Enemy = require("classes.enemy")
 local Tank = require("classes.tank")
 local Collider = require("classes.collider")
 
-local WAVE_ENEMY_MULTIPLIER = 1
+local WAVE_ENEMY_MULTIPLIER = 20
 local ENEMY_SPAWN_DISTANCE = 1500 * math.max(love.graphics.getWidth(), love.graphics.getHeight()) / 1920
 local ENEMY_SPAWN_INTERVAL = 1
+
+local PERFTEST = true
 
 local CurrentWave = 0
 local Alive = {}
@@ -68,23 +70,73 @@ local function nextWave()
     end
 end
 
-return {init = function(g)
-    game = g
+local function avgFPS()
+    local sum = 0
+    local iter = 20
 
-    if game.Paths.Debug then
-        WAVE_ENEMY_MULTIPLIER = 1
-        ENEMY_SPAWN_DISTANCE = 500
+    for i = 1, iter do
+        sum = sum + love.timer.getFPS()
+        game.RunService:Wait(0.25)
     end
 
-    while not game.Paths.Map or not game.Paths.LocalPlayer do
-        game.RunService:Wait()
-    end
+    return sum / iter
+end
 
-    while true do
-        nextWave()
+if not PERFTEST then
+    return {init = function(g)
+        game = g
 
-        repeat
+        if game.Paths.Debug then
+            WAVE_ENEMY_MULTIPLIER = 1
+            ENEMY_SPAWN_DISTANCE = 500
+        end
+
+        while not game.Paths.Map or not game.Paths.LocalPlayer do
             game.RunService:Wait()
-        until #Alive == 0
-    end
-end}
+        end
+
+        game.Paths.Enemies = Alive
+
+        while true do
+            nextWave()
+
+            repeat
+                game.RunService:Wait()
+            until #Alive == 0
+        end
+    end}
+else
+    return {init = function(g)
+        game = g
+
+        while not game.Paths.Map or not game.Paths.LocalPlayer do
+            game.RunService:Wait()
+        end
+
+        game.Paths.Enemies = Alive
+
+        game.RunService:Wait(2)
+
+        print("FPS before spawning:", avgFPS())
+
+        for i = 1, 100 do
+            table.insert(Alive, spawnEnemy())
+            game.RunService:Wait(0.1)
+        end
+
+        print("FPS after spawning:", avgFPS())
+
+        game.RunService:Wait(2)
+
+        for i, v in ipairs(Alive) do
+            v.Enemy:Destroy()
+            v.Collider:Destroy()
+
+            Alive[i] = nil
+        end
+
+        game.RunService:Wait(2)
+
+        print("FPS after destroying:", avgFPS())
+    end}
+end

@@ -4,7 +4,7 @@ local function init(g)
     game = g
 
     local cam = require("classes.camera").new()
-    local localPlayer = require("classes.localplayer").new()
+    local localPlayer = require("classes.localplayer").new(game)
 
     localPlayer:SetCamera(cam)
 
