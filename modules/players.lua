@@ -24,29 +24,14 @@ local function init(g)
 
     game.Paths.LocalPlayer = localPlayer
 
-    for i = 1,2 do
-        local enemy = require("classes.enemy").new(game)
-        local enemyTank = require("classes.tank").new(game)
-        local enemyCollider = require("classes.collider").new(game.Paths)
-
-        enemyTank.ForwSpeed = 100
-        enemyTank.RotSpeed = 1
-
-        enemyCollider.Object = enemyTank
-        enemyCollider.CollisionName = "enemyplayer"
-        enemyCollider.CollisionFilterType = "Include"
-        enemyCollider.CollisionFilter = {"*"}
-
-        game.RunService:Connect("Stepped", enemy:Control(enemyTank))
-
-        game.ObjectService:Add(enemy.Controlling)
-
-        enemy.Controlling.X = 500
-        enemy.Controlling.Y = 500
-        enemy.Target = localPlayer.Controlling
-
-        game.RunService:Wait(1 / 15)
+    if not game.Paths.Map then
+        repeat
+            game.RunService:Wait()
+        until game.Paths.Map
     end
+
+    game.Paths.Map:SpawnObject(game.Paths.LocalPlayer.Controlling, 500)
+    game.Paths.LocalPlayer.Camera:SetPosition(game.Paths.LocalPlayer.Controlling.X, game.Paths.LocalPlayer.Controlling.Y)
 end
 
 return {init = init}
