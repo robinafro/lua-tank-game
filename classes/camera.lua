@@ -4,7 +4,7 @@ Camera.__index = Camera
 function Camera.new()
     local self = setmetatable({}, Camera)
 
-    self.RenderDistanceScreenMultiplier = 0.7
+    self.RenderDistanceScreenMultiplier = 1
 
     self.X = 0
     self.Y = 0

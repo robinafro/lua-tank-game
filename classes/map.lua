@@ -15,7 +15,7 @@ function Map.new(game, chunkSize)
 
     self.GridSize = 50 --// 100-50 is optimal, anything lower than that eats too much memory, higher is inaccurate
     self.AgentRadius = 25
-    self.RefreshGridMaxDistance = 1000
+    self.RefreshGridMaxDistance = 1700 * math.max(love.graphics.getWidth(), love.graphics.getHeight()) / 1920
     self.LazyGridRefresh = true
     self.LastRefreshed = 0
     self.RefreshDebounce = 1
