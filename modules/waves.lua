@@ -26,9 +26,14 @@ local function spawnEnemy()
 
     local playerX, playerY = game.Paths.LocalPlayer.Controlling.X, game.Paths.LocalPlayer.Controlling.Y
     local angle = math.random() * math.pi * 2
+
+    local mapSize = (game.Paths.Map.Size - 1) * game.Paths.Map.ChunkSize
     
     enemyTank.X = playerX + math.cos(angle) * ENEMY_SPAWN_DISTANCE
     enemyTank.Y = playerY + math.sin(angle) * ENEMY_SPAWN_DISTANCE
+
+    enemyTank.X = math.min(math.max(enemyTank.X, game.Paths.Map.ChunkSize / 2), mapSize)
+    enemyTank.Y = math.min(math.max(enemyTank.Y, game.Paths.Map.ChunkSize / 2), mapSize)
 
     game.RunService:Connect("Stepped", enemy:Control(enemyTank))
 
@@ -65,6 +70,11 @@ end
 
 return {init = function(g)
     game = g
+
+    if game.Paths.Debug then
+        WAVE_ENEMY_MULTIPLIER = 1
+        ENEMY_SPAWN_DISTANCE = 500
+    end
 
     while not game.Paths.Map or not game.Paths.LocalPlayer do
         game.RunService:Wait()

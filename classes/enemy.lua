@@ -20,6 +20,7 @@ function Enemy.new(game)
     self.ShootAngle = 10
     self.StandAngle = 45
     self.MinGoDistance = 100
+    self.SpeedUpDistance = 700 * math.max(love.graphics.getWidth(), love.graphics.getHeight()) / 1920
 
     self.raycast = require("lib.luafinding.raycast")
     self.raycast:Initialize(self.Game, "Include", {"structure"})
@@ -56,6 +57,14 @@ function Enemy:Update(dt)
         end
     end
 
+    local distanceToTarget = math.sqrt((self.Target.X - self.Controlling.X) ^ 2 + (self.Target.Y - self.Controlling.Y) ^ 2)
+
+    if not self.DefaultSpeed then
+        self.DefaultSpeed = self.Controlling.ForwSpeed
+    end
+    
+    self.Controlling.ForwSpeed = self.DefaultSpeed * distanceToTarget / self.SpeedUpDistance
+    
     self.Controlling:Update(dt)
 end
 
