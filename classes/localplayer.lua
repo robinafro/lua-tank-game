@@ -13,7 +13,7 @@ function Player.new(game)
     self.Camera = nil
     self.Game = game
 
-    self.AimAssistEnabled = false
+    self.AimAssistEnabled = true
     self.AimAssistCorrectionAngleThreshold = 25
     self.AimAssistShootAngleThreshold = 3
     self.AimAssistSpacePress = 0.1

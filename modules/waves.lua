@@ -6,7 +6,7 @@ local WAVE_ENEMY_MULTIPLIER = 20
 local ENEMY_SPAWN_DISTANCE = 1500 * math.max(love.graphics.getWidth(), love.graphics.getHeight()) / 1920
 local ENEMY_SPAWN_INTERVAL = 1
 
-local PERFTEST = true
+local PERFTEST = false
 
 local CurrentWave = 0
 local Alive = {}
@@ -53,6 +53,8 @@ local function nextWave()
         local enemy = spawnEnemy()
 
         enemy.Tank.OnDeath = function()
+            game.RunService:Disconnect("Stepped", enemy.Connection)
+
             enemy.Enemy:Destroy()
             enemy.Collider:Destroy()
 
@@ -129,7 +131,6 @@ else
         game.RunService:Wait(2)
 
         for i, v in ipairs(Alive) do
-            -- game.ObjectService:Remove(v.Tank)
             game.RunService:Disconnect("Stepped", v.Connection)
             
             v.Enemy:Destroy()
