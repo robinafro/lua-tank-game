@@ -60,7 +60,7 @@ function ObjectService:Remove(id)
     end
 
     if not self.Renderables[id] then return end
-
+    
     for i, renderable in ipairs(self.SortedRenderables) do
         if renderable.ID == id then
             table.remove(self.SortedRenderables, i)

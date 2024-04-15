@@ -25,6 +25,10 @@ function Controller:Update()
 end
 
 function Controller:Destroy()
+    if self.OnDestroy then
+        self:OnDestroy()
+    end
+    
     for i, v in pairs(self) do
         if i ~= "Controlling" then
             self[i] = nil

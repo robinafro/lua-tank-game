@@ -37,13 +37,13 @@ local function spawnEnemy()
     enemyTank.X = math.min(math.max(enemyTank.X, game.Paths.Map.ChunkSize / 2), mapSize)
     enemyTank.Y = math.min(math.max(enemyTank.Y, game.Paths.Map.ChunkSize / 2), mapSize)
 
-    game.RunService:Connect("Stepped", enemy:Control(enemyTank))
+    local connection = game.RunService:Connect("Stepped", enemy:Control(enemyTank))
 
     game.ObjectService:Add(enemy.Controlling)
 
     enemy.Target = game.Paths.LocalPlayer.Controlling
 
-    return {Enemy = enemy, Tank = enemyTank, Collider = enemyCollider}
+    return {Enemy = enemy, Tank = enemyTank, Collider = enemyCollider, Connection = connection}
 end
 
 local function nextWave()
@@ -129,6 +129,9 @@ else
         game.RunService:Wait(2)
 
         for i, v in ipairs(Alive) do
+            -- game.ObjectService:Remove(v.Tank)
+            game.RunService:Disconnect("Stepped", v.Connection)
+            
             v.Enemy:Destroy()
             v.Collider:Destroy()
 

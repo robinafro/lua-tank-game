@@ -2,6 +2,13 @@ Object = require("classes.object")
 Collider = require("classes.collider")
 
 local raycast = {}
+raycast.__index = raycast
+
+function raycast.new()
+    local self = setmetatable({}, raycast)
+
+    return self
+end
 
 function raycast:Initialize(game, filterType, filter)
     self.Game = game
@@ -57,6 +64,11 @@ function raycast:Compute(start, goal, objects, include)
     self.RaycastCollider:Collide(self.Game.Paths.Colliders, true)
 
     return not collides
+end
+
+function raycast:Destroy()
+    self.Game.ObjectService:Remove(self.RaycastObject)
+    self.RaycastCollider:Destroy()
 end
 
 return raycast

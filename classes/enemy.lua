@@ -1,6 +1,7 @@
 Controller = require("classes.controller")
 luafinding = require("lib.luafinding.luafinding")
 vector = require("lib.luafinding.vector")
+raycast = require("lib.luafinding.raycast")
 
 local Enemy = setmetatable({}, Controller)
 Enemy.__index = Enemy
@@ -22,10 +23,14 @@ function Enemy.new(game)
     self.MinGoDistance = 100
     self.SpeedUpDistance = 700 * math.max(love.graphics.getWidth(), love.graphics.getHeight()) / 1920
 
-    self.raycast = require("lib.luafinding.raycast")
+    self.raycast = raycast.new()
     self.raycast:Initialize(self.Game, "Include", {"structure"})
 
     return self
+end
+
+function Enemy:OnDestroy()
+    self.raycast:Destroy()
 end
 
 function Enemy:Update(dt)
