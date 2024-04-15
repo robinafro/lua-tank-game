@@ -3,6 +3,10 @@ luafinding = require("lib.luafinding.luafinding")
 vector = require("lib.luafinding.vector")
 raycast = require("lib.luafinding.raycast")
 
+local function _sign(x)
+    return x > 0 and 1 or x < 0 and -1 or 0
+end
+
 local Enemy = setmetatable({}, Controller)
 Enemy.__index = Enemy
 
@@ -19,6 +23,8 @@ function Enemy.new(game)
     self.LastUpdatedPath = 0
     self.ShootDistance = 2000
     self.ShootAngle = 10
+    self.ShootWillingness = 0
+    self.Aggressivity = 0.15
     self.StandAngle = 45
     self.MinGoDistance = 100
     self.SpeedUpDistance = 700 * math.max(love.graphics.getWidth(), love.graphics.getHeight()) / 1920
@@ -38,39 +44,63 @@ function Enemy:Update(dt)
         return
     end
 
-    if os.clock() - self.LastUpdatedPath >= self.UpdatePathDebounce then
-        self.LastUpdatedPath = os.clock()
+    local angle = self:CalculateShootWillingness()
+    print(self.ShootWillingness)
+    if self.ShootWillingness > 1 - self.Aggressivity then
+        self.TargetPath = nil
 
-        coroutine.wrap(function()
-            self:UpdatePath()
-        end)()
-    end
+        self.Controlling:Move(0, angle)
 
-    if self.TargetPath then
-        local waypoint = self.TargetPath[self.CurrentWaypoint]
+        if angle < self.ShootAngle then
+            self.Controlling:Shoot({"localplayer"}, {"enemyplayer"})
+        end
+    else
+        self.TargetPos = {X = self.Target.X, Y = self.Target.Y}
 
-        if waypoint then
-            self:MoveTowards(self.TargetPath[self.CurrentWaypoint])
-            
-            if self:Reached(self.TargetPath[self.CurrentWaypoint]) then
-                self.CurrentWaypoint = self.CurrentWaypoint + 1
-            end
+        if os.clock() - self.LastUpdatedPath >= self.UpdatePathDebounce then
+            self.LastUpdatedPath = os.clock()
+    
+            coroutine.wrap(function()
+                self:UpdatePath()
+            end)()
+        end
 
-            if self.Game.Paths.Debug then
-                self:VisualizePath()
+        if self.TargetPath then
+            local waypoint = self.TargetPath[self.CurrentWaypoint]
+    
+            if waypoint then
+                self:MoveTowards(self.TargetPath[self.CurrentWaypoint])
+                
+                if self:Reached(self.TargetPath[self.CurrentWaypoint]) then
+                    self.CurrentWaypoint = self.CurrentWaypoint + 1
+                end
+    
+                if self.Game.Paths.Debug then
+                    self:VisualizePath()
+                end
             end
         end
+    
+        local distanceToTarget = math.sqrt((self.Target.X - self.Controlling.X) ^ 2 + (self.Target.Y - self.Controlling.Y) ^ 2)
+    
+        if not self.DefaultSpeed then
+            self.DefaultSpeed = self.Controlling.ForwSpeed
+        end
+        
+        self.Controlling.ForwSpeed = self.DefaultSpeed * math.max(distanceToTarget / self.SpeedUpDistance, 1)
     end
 
-    local distanceToTarget = math.sqrt((self.Target.X - self.Controlling.X) ^ 2 + (self.Target.Y - self.Controlling.Y) ^ 2)
-
-    if not self.DefaultSpeed then
-        self.DefaultSpeed = self.Controlling.ForwSpeed
-    end
-    
-    self.Controlling.ForwSpeed = self.DefaultSpeed * math.max(distanceToTarget / self.SpeedUpDistance, 1)
-    
     self.Controlling:Update(dt)
+end
+
+function Enemy:CalculateShootWillingness()
+    local distance = math.sqrt((self.Target.X - self.Controlling.X) ^ 2 + (self.Target.Y - self.Controlling.Y) ^ 2)
+    local angle = math.deg(math.atan2(self.Target.Y - self.Controlling.Y, self.Target.X - self.Controlling.X) - self.Controlling.Rotation)
+    angle = math.abs(angle) % 180 * _sign(angle)
+
+    self.ShootWillingness = (distance < self.ShootDistance) and ((1 - math.abs(angle) / 180) + (1 - distance / self.ShootDistance)) / 2 or 0
+
+    return angle
 end
 
 function Enemy:Reached(waypoint)
@@ -164,9 +194,7 @@ function Enemy:UpdatePath()
 
     local goal = self:FindClosestReachablePoint(targetMappedX, targetMappedY)-- or vector(targetMappedX, targetMappedY)
 
-    self.TargetPos = goal
-
-    local path = luafinding(start, self.TargetPos, self.Game.Paths.Map.Grid):GetPath()
+    local path = luafinding(start, goal, self.Game.Paths.Map.Grid):GetPath()
     
     if path then
         local closestWaypointIndex = 1
