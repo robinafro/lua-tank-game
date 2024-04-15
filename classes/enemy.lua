@@ -45,7 +45,7 @@ function Enemy:Update(dt)
     end
 
     local angle = self:CalculateShootWillingness()
-    print(self.ShootWillingness)
+    
     if self.ShootWillingness > 1 - self.Aggressivity then
         self.TargetPath = nil
 
