@@ -2,7 +2,7 @@ local Enemy = require("classes.enemy")
 local Tank = require("classes.tank")
 local Collider = require("classes.collider")
 
-local WAVE_ENEMY_MULTIPLIER = 20
+local WAVE_ENEMY_MULTIPLIER = 1
 local ENEMY_SPAWN_DISTANCE = 1500 * math.max(love.graphics.getWidth(), love.graphics.getHeight()) / 1920
 local ENEMY_SPAWN_INTERVAL = 1
 
