@@ -46,7 +46,8 @@ end
 
 function Collider:Collides(collider)
     local maxDistance = math.max(self.MaxDistance, collider.MaxDistance)
-    local distance = math.min(math.abs(self.Object.X + self.Object.Width / 2 - collider.Object.X - collider.Object.Width / 2), math.abs(self.Object.Y + self.Object.Height / 2 - collider.Object.Y - collider.Object.Height / 2))
+    -- local distance = math.min(math.abs(self.Object.X + self.Object.Width / 2 - collider.Object.X - collider.Object.Width / 2), math.abs(self.Object.Y + self.Object.Height / 2 - collider.Object.Y - collider.Object.Height / 2))
+    local distance = math.sqrt((self.Object.X - collider.Object.X) ^ 2 + (self.Object.Y - collider.Object.Y) ^ 2)
 
     if distance > maxDistance then
         return false
