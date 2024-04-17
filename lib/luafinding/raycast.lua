@@ -61,7 +61,7 @@ function raycast:Compute(start, goal, objects, include)
         end
     end
 
-    self.RaycastCollider:Collide(self.Game.Paths.Colliders, true)
+    self.RaycastCollider:Collide(self.Game.Paths.Colliders)
 
     return not collides
 end

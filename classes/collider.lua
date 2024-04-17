@@ -172,19 +172,29 @@ function Collider:ComputeCollision(collider, min_penetration_axis, overlap)
     end
 end
 
-function Collider:Collide(colliders, debug)
+function Collider:Collide(colliders, ignoreList)
     for i, collider in pairs(colliders) do
-        if collider.Object and self.Object then
+        if not (ignoreList or {})[collider.ID] and collider.Object and self.Object then
             if collider ~= self then
                 if self:Collides(collider) then
                     local min_penetration_axis, overlap = self:CheckCollisionSAT(collider) 
                     if min_penetration_axis then
-                        if self.CanTouch and collider.CanTouch and self.CollisionFunction then
-                            self.CollisionFunction(self, collider)
+                        if self.CanTouch and collider.CanTouch then
+                            if self.CollisionFunction then
+                                self.CollisionFunction(self, collider)
+                            end
+
+                            if collider.CollisionFunction then
+                                collider.CollisionFunction(collider, self)
+                            end
                         end
 
-                        if self.CanCollide and collider.CanCollide and colliders[i] ~= nil then
+                        if self.CanCollide and collider.CanCollide then
                             self:ComputeCollision(collider, min_penetration_axis, overlap)
+
+                            min_penetration_axis, overlap = collider:CheckCollisionSAT(self) 
+
+                            collider:ComputeCollision(self, min_penetration_axis, overlap)
                         end
                     end
                 end
