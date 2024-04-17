@@ -1,5 +1,5 @@
 local Groups = {}
-local MaxDistance = 1000
+local MAX_DISTANCE_PER_GROUP = 1000
 
 function RefreshGroups(colliders)
     Groups = {}
@@ -10,7 +10,7 @@ function RefreshGroups(colliders)
             local x, y = group[1].Object.X, group[1].Object.Y
             local distance = math.sqrt((collider.Object.X - x) ^ 2 + (collider.Object.Y - y) ^ 2)
 
-            if distance < MaxDistance then
+            if distance < MAX_DISTANCE_PER_GROUP then
                 success = true
                 table.insert(group, collider)
                 break
