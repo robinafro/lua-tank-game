@@ -6,7 +6,12 @@ rm -r bin/*
 echo "Building .love file..."
 
 # Create a .love file
-zip -9 -r bin/lua-tank-game.love . > /dev/null
+cp -r . /tmp/lua-tank-game
+rm -r /tmp/lua-tank-game/bin
+
+(cd /tmp && zip -9 -r lua-tank-game.love lua-tank-game > /dev/null)
+
+mv /tmp/lua-tank-game.love bin
 
 echo "Downloading Love2D..."
 
@@ -36,7 +41,7 @@ rm bin/lua-tank-game/lovec.exe
 echo "Zipping..."
 
 # Zip the game
-zip -r bin/lua-tank-game.zip bin/lua-tank-game
+(cd bin && zip -r lua-tank-game.zip lua-tank-game > /dev/null)
 
 echo "Cleaning up..."
 
