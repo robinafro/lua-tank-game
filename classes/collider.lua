@@ -21,7 +21,7 @@ function Collider.new(paths, object)
 
     self.Object = object
     self.ID = uuid()
-    self.MaxDistance = 200
+    self.MaxDistance = 300
 
     self.Static = false
     self.CanCollide = true
