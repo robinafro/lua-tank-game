@@ -3,6 +3,8 @@ uuid = require("uuid")
 RunService = {}
 RunService.__index = RunService
 
+RunService.Paused = false
+
 --// User functions
 
 function RunService:Connect(event, func)
@@ -69,7 +71,7 @@ function RunService.new()
     local self = setmetatable({}, RunService)
 
     self.Events = {
-        RenderStepped = {Delta = 0, Last = 0, Async = false, Functions = {}}, --// Run before rendering
+        RenderStepped = {Delta = 0, Last = 0, Async = false, NoPause = true, Functions = {}}, --// Run before rendering
         Stepped = {Delta = 0, Last = 0, Async = false, Functions = {}}, --// Run before physics
         Heartbeat = {Delta = 0, Last = 0, Async = true, Functions = {}}, --// Run after frame done
         Restart = {Delta = 0, Last = 0, Async = false, Functions = {}}
@@ -86,11 +88,19 @@ function RunService:Reset()
     end
 end
 
+function RunService:TogglePause()
+    self.Paused = not self.Paused
+end
+
 function RunService:Trigger(event)
     self:SetDelta(event)
 
     local eventObj = self.Events[event]
     
+    if self.Paused and not eventObj.NoPause then
+        return
+    end
+
     for _, func in pairs(eventObj.Functions) do
         if eventObj.Async then
             coroutine.wrap(func)(eventObj.Delta)

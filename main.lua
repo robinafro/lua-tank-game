@@ -38,11 +38,13 @@ function love.load(args)
     
     local runservice = require("runservice")
     local objectservice = require("objectservice")
+    local signal = require("signal")
 
     local game = {
         RunService = nil,
         ObjectService = nil,
-        Paths = nil
+        Signal = signal.new(),
+        Paths = nil,
     }
 
     RunService = runservice.new()
@@ -71,30 +73,40 @@ function love.load(args)
 
     function love.keypressed(key)
         if key == "escape" then
-            love.event.quit()
-        elseif key == "r" then
-            RunService:Trigger("Restart")
-
-            RunService:Reset()
-            ObjectService:Reset()
-
-            game.Paths = {Debug = debug}
-
-            for _, module in ipairs(runningModules) do
-                local co = coroutine.create(function()
-                    local success, error = pcall(function()
-                        module.init(game)
-                    end)
-                    
-                    if not success then
-                        print(error)
-                    end
-                end)
-
-                coroutine.resume(co)
-            end
+            game.Signal:send("pause")
         end
     end
+
+    game.Signal:connect("restart", function()
+        RunService:Trigger("Restart")
+
+        RunService:Reset()
+        ObjectService:Reset()
+
+        game.Paths = {Debug = debug}
+
+        for _, module in ipairs(runningModules) do
+            local co = coroutine.create(function()
+                local success, error = pcall(function()
+                    module.init(game)
+                end)
+                
+                if not success then
+                    print(error)
+                end
+            end)
+
+            coroutine.resume(co)
+        end
+    end)
+
+    game.Signal:connect("pause", function()
+        game.RunService:TogglePause()
+    end)
+
+    game.Signal:connect("quit", function()
+        love.event.quit()
+    end)
 end
 
 function love.draw()
