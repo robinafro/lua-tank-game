@@ -2,6 +2,35 @@ function graphics()
     love.window.setFullscreen(true)
 end
 
+function LoadModules(game)
+    local runningModules = {}
+
+    local modules = love.filesystem.getDirectoryItems("modules")
+
+    for _, module in ipairs(modules) do
+        local moduleName = module:sub(1, -5) -- remove the file extension (.lua)
+        local module = require("modules." .. moduleName)
+
+        if module["init"] ~= nil then
+            local co = coroutine.create(function()
+                local success, error = pcall(function()
+                    module.init(game)
+                end)
+                
+                if not success then
+                    print(error)
+                end
+            end)
+
+            table.insert(runningModules, module)
+
+            coroutine.resume(co)
+        end
+    end
+
+    return runningModules
+end
+
 function love.load(args)
     math.randomseed(os.time())
 
@@ -38,37 +67,50 @@ function love.load(args)
     game.Paths = paths
 
     --// Load modules
-    local modules = love.filesystem.getDirectoryItems("modules")
+    local runningModules = LoadModules(game)
 
-    for _, module in ipairs(modules) do
-        local moduleName = module:sub(1, -5) -- remove the file extension (.lua)
-        local module = require("modules." .. moduleName)
+    function love.keypressed(key)
+        if key == "escape" then
+            love.event.quit()
+        elseif key == "r" then
+            RunService:Trigger("Restart")
 
-        if module["init"] ~= nil then
-            local co = coroutine.create(function()
-                local success, error = pcall(function()
-                    module.init({RunService = RunService, ObjectService = ObjectService, Paths = paths})
+            RunService:Reset()
+            ObjectService:Reset()
+
+            game.Paths = {Debug = debug}
+
+            for _, module in ipairs(runningModules) do
+                local co = coroutine.create(function()
+                    local success, error = pcall(function()
+                        module.init(game)
+                    end)
+                    
+                    if not success then
+                        print(error)
+                    end
                 end)
-                
-                if not success then
-                    print(error)
-                end
-            end)
 
-            coroutine.resume(co)
+                coroutine.resume(co)
+            end
         end
     end
 end
 
 function love.draw()
-    RunService:Trigger("RenderStepped")
+    local success, err = pcall(function()
+        RunService:Trigger("RenderStepped")
+    end)
+
+    if not success then
+        print(err)
+    end
 end
 
 function love.update(dt)
-    -- trigger network event in the future
-    RunService:Trigger("Stepped")
+    local success, err = pcall(function()
+        RunService:Trigger("Stepped")
 
-    --// Do something here
-
-    RunService:Trigger("Heartbeat")
+        RunService:Trigger("Heartbeat")
+    end)
 end

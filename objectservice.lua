@@ -13,16 +13,30 @@ function ObjectService.new(game)
     self.SortInterval = 1
     self.Camera = nil
 
-    game.RunService:Connect("RenderStepped", function()
+    self:SetRenderConnection()
+
+    return self
+end
+
+function ObjectService:SetRenderConnection()
+    self.RenderConnection = self.Game.RunService:Connect("RenderStepped", function()
         if os.time() - self.LastSorted > self.SortInterval then
             self:Sort()
             self.LastSorted = os.time()
         end
 
-        self:Render(game.RunService:GetDelta("RenderStepped"))
+        self:Render(self.Game.RunService:GetDelta("RenderStepped"))
     end)
+end
 
-    return self
+function ObjectService:Reset()
+    self.Renderables = {}
+    self.SortedRenderables = {}
+    self.LastSorted = 0
+    self.SortInterval = 1
+    self.Camera = nil
+
+    self:SetRenderConnection()
 end
 
 function ObjectService:Sort()

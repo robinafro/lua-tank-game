@@ -71,10 +71,19 @@ function RunService.new()
     self.Events = {
         RenderStepped = {Delta = 0, Last = 0, Async = false, Functions = {}}, --// Run before rendering
         Stepped = {Delta = 0, Last = 0, Async = false, Functions = {}}, --// Run before physics
-        Heartbeat = {Delta = 0, Last = 0, Async = true, Functions = {}} --// Run after frame done
+        Heartbeat = {Delta = 0, Last = 0, Async = true, Functions = {}}, --// Run after frame done
+        Restart = {Delta = 0, Last = 0, Async = false, Functions = {}}
     }
 
     return self
+end
+
+function RunService:Reset()
+    for event, _ in pairs(self.Events) do
+        for id, _ in pairs(self.Events[event].Functions) do
+            self:Disconnect(event, id)
+        end
+    end
 end
 
 function RunService:Trigger(event)
