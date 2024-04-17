@@ -53,7 +53,6 @@ function Bullet:Fire()
     self.Active = true
     
     self.Function = function(dt)
-        self:Update(dt)
         self:Render()
     end
 end

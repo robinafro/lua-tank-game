@@ -120,8 +120,11 @@ function Tank:Shoot(enemies, friendlies)
 
         bullet:Fire()
 
+        self.Game.RunService:Connect("Stepped", function(dt)
+            bullet:Update(dt)
+        end)
+
         self.Game.ObjectService:Add(bullet)
-        -- self.Game.ObjectService:Sort()
 
         self.RotVelocity = self.RotVelocity + bullet.Force * self.RecoilRotationMultiplier * (math.random() - 0.5) * 2 * math.max(-self.ForwSpeed / 1000000, self.ForwVelocity / self.ForwSpeed)
         self.ForwVelocity = self.ForwVelocity - bullet.Force * self.RecoilMultiplier
