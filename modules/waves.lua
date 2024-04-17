@@ -9,7 +9,6 @@ local ENEMY_SPAWN_INTERVAL = 1
 local PERFTEST = false
 
 local CurrentWave = 0
-local Alive = {}
 
 local game = nil
 
@@ -58,15 +57,15 @@ local function nextWave()
             enemy.Enemy:Destroy()
             enemy.Collider:Destroy()
 
-            for i, v in ipairs(Alive) do
+            for i, v in ipairs(game.Paths.Enemies) do
                 if v == enemy then
-                    table.remove(Alive, i)
+                    table.remove(game.Paths.Enemies, i)
                     break
                 end
             end
         end
 
-        table.insert(Alive, enemy)
+        table.insert(game.Paths.Enemies, enemy)
 
         game.RunService:Wait(ENEMY_SPAWN_INTERVAL)
     end
@@ -84,10 +83,13 @@ local function avgFPS()
     return sum / iter
 end
 
-if not PERFTEST then
-    return {init = function(g)
-        game = g
 
+return {init = function(g)
+    game = g
+
+    CurrentWave = 0
+
+    if not PERFTEST then
         if game.Paths.Debug then
             WAVE_ENEMY_MULTIPLIER = 1
             ENEMY_SPAWN_DISTANCE = 500
@@ -97,32 +99,26 @@ if not PERFTEST then
             game.RunService:Wait()
         end
 
-        game.Paths.Enemies = Alive
+        game.Paths.Enemies = {}
 
-        while true do
-            nextWave()
-
-            repeat
-                game.RunService:Wait()
-            until #Alive == 0
-        end
-    end}
-else
-    return {init = function(g)
-        game = g
-
+        game.RunService:Connect("Heartbeat", function()
+            if #game.Paths.Enemies == 0 then
+                nextWave()
+            end
+        end)
+    else
         while not game.Paths.Map or not game.Paths.LocalPlayer do
             game.RunService:Wait()
         end
 
-        game.Paths.Enemies = Alive
+        game.Paths.Enemies = {}
 
         game.RunService:Wait(2)
 
         print("FPS before spawning:", avgFPS())
 
         for i = 1, 100 do
-            table.insert(Alive, spawnEnemy())
+            table.insert(game.Paths.Enemies, spawnEnemy())
             game.RunService:Wait(0.1)
         end
 
@@ -130,17 +126,18 @@ else
 
         game.RunService:Wait(2)
 
-        for i, v in ipairs(Alive) do
+        for i, v in ipairs(game.Paths.Enemies) do
             game.RunService:Disconnect("Stepped", v.Connection)
             
             v.Enemy:Destroy()
             v.Collider:Destroy()
 
-            Alive[i] = nil
+            game.Paths.Enemies[i] = nil
         end
 
         game.RunService:Wait(2)
 
         print("FPS after destroying:", avgFPS())
-    end}
+    end
 end
+}
