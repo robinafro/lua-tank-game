@@ -74,6 +74,8 @@ function love.load(args)
     function love.keypressed(key)
         if key == "escape" then
             game.Signal:send("pause")
+        elseif key == "r" then
+            game.Signal:send("restart")
         end
     end
 
