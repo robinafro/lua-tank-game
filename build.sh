@@ -6,10 +6,10 @@ rm -r bin/*
 echo "Building .love file..."
 
 # Create a .love file
-cp -r . /tmp/lua-tank-game
+cp -r . /tmp/lua-tank-game > /dev/null
 rm -r /tmp/lua-tank-game/bin
 
-(cd /tmp && zip -9 -r lua-tank-game.love lua-tank-game > /dev/null)
+(cd /tmp/lua-tank-game && zip -9 -r ../lua-tank-game.love . > /dev/null)
 
 mv /tmp/lua-tank-game.love bin
 
