@@ -114,7 +114,7 @@ function RunService:SetDelta(event)
     local time = love.timer.getTime()
 
     local function set(ev)
-        self.Events[ev].Delta = (time - self.Events[ev].Last) * (love.keyboard.isDown("lshift") and 10 or 1)
+        self.Events[ev].Delta = (time - self.Events[ev].Last)-- * (love.keyboard.isDown("lshift") and 10 or 1)
         self.Events[ev].Last = time
     end
     

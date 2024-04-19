@@ -127,4 +127,8 @@ function love.update(dt)
 
         RunService:Trigger("Heartbeat")
     end)
+
+    if not success then
+        print(err)
+    end
 end
