@@ -141,7 +141,7 @@ end
 
 function Tank:TakeDamage(dmg)
     self.Health = self.Health - dmg
-
+    
     if self.Health <= 0 and self.OnDeath then
         self.OnDeath()
     end

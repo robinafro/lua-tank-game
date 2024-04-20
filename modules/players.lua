@@ -32,6 +32,10 @@ local function init(g)
 
     game.Paths.Map:SpawnObject(game.Paths.LocalPlayer.Controlling, 500)
     game.Paths.LocalPlayer.Camera:SetPosition(game.Paths.LocalPlayer.Controlling.X, game.Paths.LocalPlayer.Controlling.Y)
+
+    localPlayer.Controlling.OnDeath = function()
+        game.Paths.Events.PlayerDied:Fire(localPlayer)
+    end
 end
 
 return {init = init}
