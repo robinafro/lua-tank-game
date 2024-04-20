@@ -1,5 +1,7 @@
 local Frame = require "Frame"
 local ImageLabel = require "ImageLabel"
+local TextLabel = require "TextLabel"
+
 local ScreenGui = require "test_ScreenGui"
 local Vector2 = require "classes/vector2"
 local Color3 = require "classes/color3"
@@ -19,7 +21,7 @@ function love.load()
         frame.size = Vector2.new(0.95, 0.95)
         frame.color = Color3.new(math.random(), math.random(), math.random())
 
-        prev:Insert(frame)
+        -- prev:Insert(frame)
         prev = frame
 
         table.insert(frames, frame)
@@ -35,7 +37,18 @@ function love.load()
     imageLabel.image = love.graphics.newImage("roblox.png")
     imageLabel.scaleType = "fit"
 
-    screenGui:Insert(imageLabel)
+    -- screenGui:Insert(imageLabel)
+
+    textLabel = TextLabel.new()
+    textLabel.anchorPoint = Vector2.new(0.5, 0.5)
+    textLabel.position = Vector2.new(0.5, 0.5)
+    textLabel.size = Vector2.new(0.5, 0.1)
+    textLabel.backgroundColor3 = Color3.new(1, 0, 1)
+    textLabel.backgroundTransparency = 0
+    textLabel.text = "Hello, World!"
+    textLabel:SetFont(24)
+
+    screenGui:Insert(textLabel)
 end
 
 function love.update(dt)
@@ -48,7 +61,7 @@ function love.update(dt)
     --     frame.position = frame.position + Vector2.new(horizontal * spd, vertical * spd)
     -- end
 
-    imageLabel.size = imageLabel.size + Vector2.new(horizontal * spd, vertical * spd)
+    textLabel.size = textLabel.size + Vector2.new(horizontal * spd, vertical * spd)
 end
 
 function love.draw()
