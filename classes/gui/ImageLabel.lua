@@ -1,10 +1,13 @@
 local BaseFrame = require("BaseFrame")
+local BaseButton = require("BaseButton")
 
 local Vector2 = require("classes/vector2")
 local Color3 = require("classes/color3")
 
 local ImageLabel = setmetatable({}, BaseFrame)
-ImageLabel.__index = ImageLabel
+ImageLabel.__index = function(table, key)
+    return ImageLabel[key] or table.Button[key]
+end
 
 function ImageLabel.new()
     local self = setmetatable({}, ImageLabel)
@@ -24,6 +27,7 @@ function ImageLabel.new()
     self.imageTransparency = 0
 
     self.Frame = BaseFrame.new()
+    self.Button = BaseButton.new()
 
     self.scaleX, self.scaleY = 1, 1
     self.offsetX, self.offsetY = 0, 0
@@ -81,6 +85,8 @@ function ImageLabel:Render()
     self.Frame.transparency = self.backgroundTransparency
 
     local pos, size = self.Frame:Render()
+
+    self.Button:Check(pos, size)
 
     self:ComputeScale(size)
 

@@ -1,10 +1,13 @@
 local BaseFrame = require("BaseFrame")
+local BaseButton = require("BaseButton")
 
 local Vector2 = require("classes/vector2")
 local Color3 = require("classes/color3")
 
 local TextLabel = setmetatable({}, BaseFrame)
-TextLabel.__index = TextLabel
+TextLabel.__index = function(table, key)
+    return TextLabel[key] or table.Button[key]
+end
 
 function TextLabel.new()
     local self = setmetatable({}, TextLabel)
@@ -26,6 +29,7 @@ function TextLabel.new()
     self.textVerticalAlign = "center"
 
     self.Frame = BaseFrame.new()
+    self.Button = BaseButton.new()
 
     return self
 end
@@ -49,6 +53,8 @@ function TextLabel:Render()
     self.Frame.parent = self.parent
 
     local absPos, absSize = self.Frame:Render()
+
+    self.Button:Check(absPos, absSize)
 
     love.graphics.setColor(self.backgroundColor3.r, self.backgroundColor3.g, self.backgroundColor3.b, 1 - self.backgroundTransparency)
     love.graphics.rectangle("fill", absPos.x, absPos.y, absSize.x, absSize.y)

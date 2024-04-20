@@ -37,7 +37,7 @@ function love.load()
     imageLabel.image = love.graphics.newImage("roblox.png")
     imageLabel.scaleType = "fit"
 
-    -- screenGui:Insert(imageLabel)
+    screenGui:Insert(imageLabel)
 
     textLabel = TextLabel.new()
     textLabel.anchorPoint = Vector2.new(0.5, 0.5)
