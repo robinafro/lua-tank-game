@@ -1,4 +1,5 @@
 local Frame = require "Frame"
+local ImageLabel = require "ImageLabel"
 local ScreenGui = require "test_ScreenGui"
 local Vector2 = require "classes/vector2"
 local Color3 = require "classes/color3"
@@ -11,7 +12,7 @@ function love.load()
     screenGui = ScreenGui.new()
 
     local prev = screenGui
-    for i = 1, 200 do
+    for i = 1, 1 do
         local frame = Frame.new()
         frame.anchorPoint = Vector2.new(0.5, 0.5)
         frame.position = Vector2.new(0.5,0.5)
@@ -23,17 +24,31 @@ function love.load()
 
         table.insert(frames, frame)
     end
+
+    imageLabel = ImageLabel.new()
+    imageLabel.anchorPoint = Vector2.new(0.5, 0.5)
+    imageLabel.position = Vector2.new(0.5, 0.5)
+    imageLabel.size = Vector2.new(0.5, 0.1)
+    imageLabel.backgroundColor3 = Color3.new(1, 0, 1)
+    imageLabel.backgroundTransparency = 1
+
+    imageLabel.image = love.graphics.newImage("roblox.png")
+    imageLabel.scaleType = "fit"
+
+    screenGui:Insert(imageLabel)
 end
 
 function love.update(dt)
     horizontal = love.keyboard.isDown("d") and 1 or love.keyboard.isDown("a") and -1 or 0
     vertical = love.keyboard.isDown("s") and 1 or love.keyboard.isDown("w") and -1 or 0
 
-    local spd = 0.01 * dt
+    local spd = 1 * dt
 
-    for i, frame in pairs(frames) do
-        frame.position = frame.position + Vector2.new(horizontal * spd, vertical * spd)
-    end
+    -- for i, frame in pairs(frames) do
+    --     frame.position = frame.position + Vector2.new(horizontal * spd, vertical * spd)
+    -- end
+
+    imageLabel.size = imageLabel.size + Vector2.new(horizontal * spd, vertical * spd)
 end
 
 function love.draw()

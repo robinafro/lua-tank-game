@@ -15,6 +15,7 @@ function BaseFrame.new()
     self.size = Vector2.new(0,0)
     self.anchorPoint = Vector2.new(0, 0)
     self.color = Color3.new(1, 1, 1)
+    self.transparency = 0
 
     self.absoluteSize = nil
     self.previousSize = nil
@@ -59,9 +60,12 @@ end
 
 function BaseFrame:Render()
     local size = self:GetAbsoluteSize()
-    local posX, posY = unpack((self:GetPixelRelativePosition() - size * self.anchorPoint):toTable())
+    local pos = self:GetPixelRelativePosition() - size * self.anchorPoint
 
-    love.graphics.setColor(unpack(self.color:toTable()))
+    local posX, posY = unpack(pos:toTable())
+
+    local r, g, b = unpack(self.color:toTable())
+    love.graphics.setColor(r, g, b, 1 - self.transparency)
     
     love.graphics.rectangle("fill", posX, posY, unpack(size:toTable()))
     love.graphics.translate(posX, posY)
@@ -71,6 +75,8 @@ function BaseFrame:Render()
     end
 
     love.graphics.origin()
+
+    return pos, size
 end
 
 return BaseFrame
