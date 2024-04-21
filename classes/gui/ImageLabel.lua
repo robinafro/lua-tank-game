@@ -1,5 +1,5 @@
-local BaseFrame = require("BaseFrame")
-local BaseButton = require("BaseButton")
+local BaseFrame = require("classes/gui/BaseFrame")
+local BaseButton = require("classes/gui/BaseButton")
 
 local Vector2 = require("classes/vector2")
 local Color3 = require("classes/color3")
@@ -11,6 +11,8 @@ end
 
 function ImageLabel.new()
     local self = setmetatable({}, ImageLabel)
+
+    -- self.Visible = true
 
     self.position = Vector2.new(0, 0)
     self.size = Vector2.new(0, 0)
@@ -68,6 +70,10 @@ function ImageLabel:ComputeScale(size)
 end
 
 function ImageLabel:Render()
+    if not self;IsVisible() then
+        return
+    end
+
     if self.size.x < 0 then
         self.size = Vector2.new(0, self.size.y)
     end

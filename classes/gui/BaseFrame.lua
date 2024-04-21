@@ -1,7 +1,7 @@
 local Vector2 = require("classes/vector2")
 local Color3 = require("classes/color3")
 
-local BaseGui = require("BaseGui")
+local BaseGui = require("classes/gui/BaseGui")
 
 local BaseFrame = setmetatable({}, BaseGui)
 BaseFrame.__index = BaseFrame
@@ -59,6 +59,10 @@ function BaseFrame:GetPixelRelativePosition()
 end
 
 function BaseFrame:Render()
+    if not self:IsVisible() then
+        return
+    end
+
     local size = self:GetAbsoluteSize()
     local pos = self:GetPixelRelativePosition() - size * self.anchorPoint
 

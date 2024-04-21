@@ -1,13 +1,16 @@
---// TODO: This will be a class that creates an ObjectService object with HUD = true
-local Object = require("classes/object")
+local BaseGui = require("classes/gui/BaseGui")
+local Vector2 = require("classes/vector2")
 
 local ScreenGui = {}
 ScreenGui.__index = ScreenGui
 
 function ScreenGui.new(game)
-    local self = setmetatable({}, ScreenGui)
+    local self = setmetatable(BaseGui.new(), ScreenGui)
 
     self.Game = game
+
+    self.size = Vector2.new(love.graphics.getWidth(), love.graphics.getHeight())
+    self.position = Vector2.new(0, 0)
 
     self.children = {}
     self.object = Object.new()
@@ -20,9 +23,17 @@ function ScreenGui.new(game)
 end
 
 function ScreenGui:Render()
+    if not self:IsVisible() then
+        return
+    end
+
     for _, child in ipairs(self.children) do
         child:Render()
     end
+end
+
+function ScreenGui:GetAbsoluteSize()
+    return self.size
 end
 
 return ScreenGui

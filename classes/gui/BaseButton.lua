@@ -1,4 +1,4 @@
-local BaseFrame = require("BaseFrame")
+local BaseFrame = require("classes/gui/BaseFrame")
 local Vector2 = require("classes/vector2")
 
 local BaseButton = setmetatable({}, BaseFrame)

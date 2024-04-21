@@ -1,5 +1,5 @@
-local BaseFrame = require("BaseFrame")
-local BaseButton = require("BaseButton")
+local BaseFrame = require("classes/gui/BaseFrame")
+local BaseButton = require("classes/gui/BaseButton")
 
 local Vector2 = require("classes/vector2")
 local Color3 = require("classes/color3")
@@ -11,6 +11,8 @@ end
 
 function TextLabel.new()
     local self = setmetatable({}, TextLabel)
+
+    self.Visible = true
 
     self.position = Vector2.new(0, 0)
     self.size = Vector2.new(0, 0)
@@ -46,6 +48,10 @@ function TextLabel:SetFont(size, font)
 end
 
 function TextLabel:Render()
+    if not self:IsVisible() then
+        return
+    end
+
     self.Frame.position = self.position
     self.Frame.size = self.size
     self.Frame.anchorPoint = self.anchorPoint
