@@ -6,6 +6,7 @@ local Color3 = require("classes/color3")
 
 local TextLabel = setmetatable({}, BaseFrame)
 TextLabel.__index = function(table, key)
+    print(key)
     return TextLabel[key] or table.Button[key]
 end
 
@@ -59,6 +60,8 @@ function TextLabel:Render()
     self.Frame.parent = self.parent
 
     local absPos, absSize = self.Frame:Render()
+
+    print(absPos, absSize)
 
     self.Button:Check(absPos, absSize)
 

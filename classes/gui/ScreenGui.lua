@@ -1,7 +1,7 @@
 local BaseGui = require("classes/gui/BaseGui")
 local Vector2 = require("classes/vector2")
 
-local ScreenGui = {}
+local ScreenGui = setmetatable({}, BaseGui)
 ScreenGui.__index = ScreenGui
 
 function ScreenGui.new(game)
@@ -16,8 +16,14 @@ function ScreenGui.new(game)
     self.object = Object.new()
 
     self.object.HUD = true
+    self.object.AlwaysVisible = true
+    self.object.ZIndex = 100000000
 
     game.ObjectService:Add(self.object)
+
+    self.object.Function = function()
+        self:Render()
+    end
 
     return self
 end

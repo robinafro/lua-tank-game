@@ -9,6 +9,8 @@ BaseFrame.__index = BaseFrame
 function BaseFrame.new()
     local self = setmetatable({}, BaseFrame)
 
+    self.Visible = true
+
     self.children = {}
 
     self.position = Vector2.new(0, 0)

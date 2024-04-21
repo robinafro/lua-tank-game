@@ -12,7 +12,7 @@ end
 function ImageLabel.new()
     local self = setmetatable({}, ImageLabel)
 
-    -- self.Visible = true
+    self.Visible = true
 
     self.position = Vector2.new(0, 0)
     self.size = Vector2.new(0, 0)
@@ -70,7 +70,7 @@ function ImageLabel:ComputeScale(size)
 end
 
 function ImageLabel:Render()
-    if not self;IsVisible() then
+    if not self:IsVisible() then
         return
     end
 
