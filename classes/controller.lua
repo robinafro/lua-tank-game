@@ -20,7 +20,7 @@ function Controller:Control(controlling)
     end
 end
 
-function Controller:Update()
+function Controller:Update(dt)
     print("Controller:Update() is a placeholder function. The class that inherits from Controller should override this function.")
 end
 
