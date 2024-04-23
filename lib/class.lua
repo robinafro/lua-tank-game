@@ -1,57 +1,43 @@
---[[
-This module gives us some class-like functionality
-]]
+return function(a, b)
+    local initialize, inherit = nil, nil
 
-local Class = {}
-Class.__index = Class
-
---default implementation
-function Class:new() end
-
---create a new Class type from our base class
-function Class:derive(class_type)
-    assert(class_type ~= nil, "parameter class_type must not be nil!")
-    assert(type(class_type) == "string", "parameter class_type class must be string!")
-    local cls = {}
-    cls["__call"] = Class.__call
-    cls.type = class_type
-    cls.__index = cls
-    cls.super = self
-    setmetatable(cls, self)
-    return cls
-end
-
---Check if the instance is a sub-class of the given type
-function Class:is(class)
-    assert(class ~= nil, "parameter class must not be nil!")
-    assert(type(class) == "table", "parameter class must be of Type Class!")
-    local mt = getmetatable(self)
-    while mt do
-        if mt == class then return true end
-        mt = getmetatable(mt)
+    if b then --// Parse arguments
+        initialize, inherit = b, a
+    else
+        initialize = a
     end
-    return false
-end
 
-function Class:is_type(class_type)
-    assert(class_type ~= nil, "parameter class_type must not be nil!")
-    assert(type(class_type) == "string", "parameter class_type class must be string!")
-    local base = self
-    while base do
-        if base.type == class_type then return true end
-        base = base.super
+    local class do
+        if inherit then
+            class = setmetatable({}, inherit)
+        else
+            class = {}
+        end
     end
-    return false
-end
 
-function Class:__call(...)
-    local inst = setmetatable({}, self)
-    inst:new(...)
-    return inst
-end
+    class.__index = class
 
-function Class:get_type()
-    return self.type
-end
+    initialize(class)
 
-return Class
+    local constructor = class.new
+
+    function class.new(...)
+        local self = {}
+
+        if inherit then
+            self = setmetatable(inherit.new and inherit.new(...) or inherit, class)
+        else
+            setmetatable(self, class)
+        end
+
+        self.__index = self
+
+        if constructor then
+            constructor(self, ...)
+        end
+
+        return self
+    end
+
+    return class
+end
