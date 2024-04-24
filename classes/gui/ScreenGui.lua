@@ -1,5 +1,6 @@
 local BaseGui = require("classes/gui/BaseGui")
 local Vector2 = require("classes/vector2")
+local Object = require("classes/object")
 
 local ScreenGui = setmetatable({}, BaseGui)
 ScreenGui.__index = ScreenGui

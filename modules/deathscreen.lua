@@ -11,6 +11,8 @@ end
 
 function OnPlayerDied(player)
     if player == game.Paths.LocalPlayer then
+        game.Paths.UIs.Healthbars.Visible = false
+        
         game.Signal:send("pause")
         gui.Visible = true
     end

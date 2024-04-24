@@ -64,7 +64,8 @@ function Tank.new(game)
     self.Ammo = 1000000000000
     self.BulletForce = self.DefaultBulletForce
 
-    self.Health = 100
+    self.MaxHealth = 100
+    self.Health = self.MaxHealth
     
     self.Function = function(dt)
         self:Render()

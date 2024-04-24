@@ -7,11 +7,19 @@ local Classes = {
 local GuiLoader = {}
 GuiLoader.__index = GuiLoader
 
-function GuiLoader.new(game)
+function GuiLoader.new(game, name)
     local self = setmetatable({}, GuiLoader)
 
     self.Game = game
     self.ScreenGui = require("classes/gui/ScreenGui").new(game)
+
+    if not game.Paths.UIs then
+        game.Paths.UIs = {}
+    end
+
+    if name then
+        game.Paths.UIs[name] = self.ScreenGui
+    end
 
     return self
 end
