@@ -1,13 +1,24 @@
 local Class = require("lib.class")
 
-local V = Class:derive("Vector2")
+local V = {}
+V.__index = V
+
+setmetatable(V, {
+    __call = function(cls, ...)
+        return cls.new(...)
+    end
+})
 
 local pow = math.pow
 local sqrt = math.sqrt
 
-function V:new(x,y)
+function V.new(x,y)
+    local self = setmetatable({}, V)
+
     self.x = x or 0
     self.y = y or 0
+
+    return self
 end
 
 --Calculates the magnitude of the vector
