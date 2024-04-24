@@ -7,18 +7,23 @@ local Classes = {
 local GuiLoader = {}
 GuiLoader.__index = GuiLoader
 
-function GuiLoader.new(game, name)
+function GuiLoader.new(game, name, type)
     local self = setmetatable({}, GuiLoader)
 
     self.Game = game
-    self.ScreenGui = require("classes/gui/ScreenGui").new(game)
+    self.Name = name
+    self.Gui = require("classes/gui/"..(type or "ScreenGui")).new(game)
 
     if not game.Paths.UIs then
         game.Paths.UIs = {}
     end
 
     if name then
-        game.Paths.UIs[name] = self.ScreenGui
+        if not game.Paths.UIs[name] then
+            game.Paths.UIs[name] = {}
+        end
+
+        table.insert(game.Paths.UIs[name], self.Gui)
     end
 
     return self
@@ -29,9 +34,26 @@ function GuiLoader:Insert(className, gui)
         className = Classes[className].new()
     end
 
-    (gui or self.ScreenGui):Insert(className)
+    (gui or self.Gui):Insert(className)
 
     return className
+end
+
+function GuiLoader:Destroy()
+    if self.Name then
+        local index = table.find(self.Game.Paths.UIs[self.Name], self.Gui)
+
+        if index then
+            table.remove(self.Game.Paths.UIs[self.Name], index)
+        end
+    end
+
+    self.Game.ObjectService:Remove(self.Gui.connection)
+
+    self.Gui.Visible = false
+    self.Gui.children = {}
+
+    self.Gui.Object:Destroy()
 end
 
 return GuiLoader

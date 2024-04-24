@@ -12,7 +12,7 @@ end
 function OnPlayerDied(player)
     if player == game.Paths.LocalPlayer then
         game.Paths.UIs.Healthbars.Visible = false
-        
+
         game.Signal:send("pause")
         gui.Visible = true
     end
@@ -57,9 +57,9 @@ function InitializeGui()
         Respawn()
     end)
 
-    guiLoader.ScreenGui.Visible = false
+    guiLoader.Gui.Visible = false
 
-    return guiLoader.ScreenGui
+    return guiLoader.Gui
 end
 
 return {init = function(g)

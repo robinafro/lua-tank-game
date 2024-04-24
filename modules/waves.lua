@@ -51,6 +51,8 @@ local function nextWave()
     for i = 1, math.ceil(CurrentWave * WAVE_ENEMY_MULTIPLIER) do
         local enemy = spawnEnemy()
 
+        game.Signal:send("enemySpawned", enemy.Enemy)
+
         enemy.Tank.OnDeath = function()
             game.RunService:Disconnect("Stepped", enemy.Connection)
 

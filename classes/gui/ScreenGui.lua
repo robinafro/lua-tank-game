@@ -20,7 +20,7 @@ function ScreenGui.new(game)
     self.object.AlwaysVisible = true
     self.object.ZIndex = 1000000
 
-    game.ObjectService:Add(self.object)
+    self.connection = game.ObjectService:Add(self.object)
     game.ObjectService:Sort()
 
     self.object.Function = function()
