@@ -56,6 +56,7 @@ function TextLabel:Render()
     self.Frame.size = self.size
     self.Frame.anchorPoint = self.anchorPoint
     self.Frame.color = self.backgroundColor3
+    self.Frame.transparency = self.backgroundTransparency
     self.Frame.parent = self.parent
 
     local absPos, absSize = self.Frame:Render()

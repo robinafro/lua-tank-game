@@ -14,6 +14,10 @@ function Camera.new()
     self.Target = nil
     self.TargetPosition = {X = 0, Y = 0}
 
+    self.defaultFont = love.graphics.newFont()
+
+    love.graphics.setDefaultFilter("nearest", "nearest") 
+
     return self
 end
 
@@ -67,6 +71,8 @@ function Camera:Render(renderables, dt)
 
                 love.graphics.pop()
             end
+
+            love.graphics.setFont(self.defaultFont)
 
             love.graphics.pop()
         end

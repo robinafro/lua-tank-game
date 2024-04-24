@@ -1,5 +1,6 @@
 local BaseFrame = require("classes/gui/BaseFrame")
 local Vector2 = require("classes/vector2")
+local Event = require("classes/event")
 
 local BaseButton = setmetatable({}, BaseFrame)
 BaseButton.__index = BaseButton
@@ -7,11 +8,11 @@ BaseButton.__index = BaseButton
 function BaseButton.new()
     local self = setmetatable({}, BaseButton)
 
-    self.MouseEnter = {} --// TODO: replace tables with Event objects
-    self.MouseLeave = {}
-    self.MouseClick = {}
-    self.MouseDown = {}
-    self.MouseUp = {}
+    self.MouseEnter = Event.new()
+    self.MouseLeave = Event.new()
+    self.MouseClick = Event.new()
+    self.MouseDown = Event.new()
+    self.MouseUp = Event.new()
 
     self.isHovered = false
     self.isPressed = false
@@ -32,14 +33,14 @@ function BaseButton:Check(pos, size)
 
     if self.isHovered and self.isPressed ~= self._prevIsPressed then
         if self.isPressed == true then
-            print("MouseDown")
+            self.MouseDown:Fire()
 
             self._heldDownTracker = true
         else
-            print("MouseUp")
+            self.MouseUp:Fire()
 
             if self._heldDownTracker == true then
-                print("MouseClick")
+                self.MouseClick:Fire()
             end
 
             self._heldDownTracker = false
@@ -48,9 +49,9 @@ function BaseButton:Check(pos, size)
 
     if self.isHovered ~= self._prevIsHovered then
         if self.isHovered == true then
-            print("MouseEnter")
+            self.MouseEnter:Fire()
         else
-            print("MouseLeave")
+            self.MouseLeave:Fire()
 
             self._heldDownTracker = false
         end

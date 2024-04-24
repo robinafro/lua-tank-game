@@ -20,7 +20,7 @@ function Bullet.new(x, y, rot, game)
     self.Damage = 0
     self.Whitelist = {}
     self.Blacklist = {}
-    self.ZIndex = 5000
+    self.ZIndex = 500
     self.AlwaysVisible = true
 
     self.Image = love.graphics.newImage("assets/objects/bullet.png")
