@@ -40,8 +40,15 @@ function GuiLoader:Insert(className, gui)
 end
 
 function GuiLoader:Destroy()
+    local function _find(t, value)
+        for i, v in pairs(t) do
+            if v == value then
+                return i
+            end
+        end
+    end
     if self.Name then
-        local index = table.find(self.Game.Paths.UIs[self.Name], self.Gui)
+        local index = _find(self.Game.Paths.UIs[self.Name], self.Gui)
 
         if index then
             table.remove(self.Game.Paths.UIs[self.Name], index)
