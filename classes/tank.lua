@@ -113,7 +113,7 @@ function Tank:Shoot(enemies, friendlies)
         local bullet = Bullet.new(self.X + self.Width / 2, self.Y + self.Height / 2, self.Rotation, self.Game)
 
         bullet.Force = self.BulletForce
-        bullet.Damage = 100
+        bullet.Damage = 25
         bullet.Whitelist = enemies
         bullet.Blacklist = friendlies
         bullet.Controller = self.Controller
