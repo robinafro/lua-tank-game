@@ -66,6 +66,9 @@ function Tank.new(game)
 
     self.MaxHealth = 100
     self.Health = self.MaxHealth
+    self.HealthIncrease = 5 --// Per second
+    self.HealDebounce = 3
+    self.LastTookDamage = 0
     
     self.Function = function(dt)
         self:Render()
@@ -103,6 +106,11 @@ function Tank:Update(dt)
     
     self.X = self.X + math.cos(self.Rotation) * self.ForwVelocity * dt
     self.Y = self.Y + math.sin(self.Rotation) * self.ForwVelocity * dt
+
+    --// Heal
+    if love.timer.getTime() - self.LastTookDamage > self.HealDebounce then
+        self:Heal(dt)
+    end
 end
 
 function Tank:Shoot(enemies, friendlies)
@@ -140,9 +148,15 @@ function Tank:Shoot(enemies, friendlies)
     end
 end
 
+function Tank:Heal(dt)
+    self.Health = math.min(self.Health + self.HealthIncrease * dt, self.MaxHealth)
+end
+
 function Tank:TakeDamage(dmg)
     self.Health = self.Health - dmg
     
+    self.LastTookDamage = love.timer.getTime()
+
     if self.Health <= 0 and self.OnDeath then
         self.OnDeath()
     end
