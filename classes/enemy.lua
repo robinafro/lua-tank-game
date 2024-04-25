@@ -10,6 +10,9 @@ end
 local Enemy = setmetatable({}, Controller)
 Enemy.__index = Enemy
 
+Enemy.MinAggressivity = 0.07
+Enemy.MaxAggressivity = 0.4
+
 function Enemy.new(game)
     local self = setmetatable({}, Enemy)
 
@@ -22,9 +25,9 @@ function Enemy.new(game)
     self.UpdatePathDebounce = 0.5
     self.LastUpdatedPath = 0
     self.ShootDistance = 2000
-    self.ShootAngle = 10
+    self.ShootAngle = 25
     self.ShootWillingness = 0
-    self.Aggressivity = 0.15
+    self.Aggressivity = math.random() * (Enemy.MaxAggressivity - Enemy.MinAggressivity) + Enemy.MinAggressivity
     self.StandAngle = 45
     self.MinGoDistance = 100
     self.SpeedUpDistance = 700 * math.max(love.graphics.getWidth(), love.graphics.getHeight()) / 1920
