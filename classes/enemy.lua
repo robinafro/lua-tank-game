@@ -97,6 +97,13 @@ function Enemy:Update(dt)
 end
 
 function Enemy:CalculateShootWillingness()
+    local reachable = self.raycast:Compute(vector(self.Controlling.X, self.Controlling.Y), vector(self.Target.X, self.Target.Y), self.Game.Paths.Renderables, "structure")
+
+    if not reachable then
+        self.ShootWillingness = 0
+        return 0
+    end
+
     local distance = math.sqrt((self.Target.X - self.Controlling.X) ^ 2 + (self.Target.Y - self.Controlling.Y) ^ 2)
     local angle = math.deg(math.atan2(self.Target.Y - self.Controlling.Y, self.Target.X - self.Controlling.X) - self.Controlling.Rotation)
     angle = math.abs(angle) % 180 * _sign(angle)

@@ -10,7 +10,7 @@ local PERFTEST = false
 
 local CurrentWave = 0
 
-local game = nil
+local game = {}
 
 local function spawnEnemy()
     local enemy = require("classes.enemy").new(game)
@@ -23,6 +23,7 @@ local function spawnEnemy()
     enemyTank.BulletForce = math.random(2000, 3000)
     enemyTank.MaxHealth = ((CurrentWave - 1) * 60 + 80) + math.random(1, 30)
     enemyTank.Health = enemyTank.MaxHealth
+    enemyTank.RecoilMultiplier = 0.01
 
     enemyCollider.Object = enemyTank
     enemyCollider.CollisionName = "enemyplayer"
