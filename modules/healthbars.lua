@@ -88,7 +88,7 @@ return {init = function(game)
             game.RunService:Wait()
         end
 
-        local loader = GuiLoader.new(game, nil, "BillboardGui")
+        local loader = GuiLoader.new(game, "Healthbars", "BillboardGui")
         loader.Gui.size = Vector2.new(90, 15)
         loader.Gui.adornee = enemy.Controlling
 
