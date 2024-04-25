@@ -4,7 +4,7 @@
 local Groups = {}
 
 local GRID_SIZE = 1000
-local SIZE_OFFSET = 50 --// Used to make sure the colliders are still in the same group when they are on the edge of the grid
+local SIZE_OFFSET = 250 --// Used to make sure the colliders are still in the same group when they are on the edge of the grid
 
 function RefreshGroups(colliders)
     Groups = {}
@@ -41,8 +41,8 @@ return {init = function(game)
     game.RunService:Connect("Stepped", function(dt)
         RefreshGroups(game.Paths.Colliders)
 
-        local ignoreList = {}
         for _, group in pairs(Groups) do
+            local ignoreList = {}
             for _, collider in pairs(group) do
                 collider:Collide(group, ignoreList)
                 ignoreList[collider.ID] = true
