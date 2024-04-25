@@ -3,6 +3,7 @@ local Vector2 = require("classes/vector2")
 local Color3  = require("classes/color3")
 
 local game, gui
+local GlobalReferences = {}
 
 function Respawn()
     game.Signal:send("pause")
@@ -14,6 +15,8 @@ function OnPlayerDied(player)
         for _, v in pairs(game.Paths.UIs.Healthbars) do
             v.Visible = false
         end
+
+        GlobalReferences.ScoreText.text = string.format(GlobalReferences.ScoreText.text, string.format("%u", game.Paths.LocalPlayer.Score):reverse():gsub( "(%d%d%d)" , "%1," ):reverse():gsub("^,",""))
 
         game.Signal:send("pause")
         gui.Visible = true
@@ -43,6 +46,16 @@ function InitializeGui()
     scoreContainer.anchorPoint = Vector2.new(0.5, 0.5)
     scoreContainer.position = Vector2.new(0.5, 0.5)
     scoreContainer.size = Vector2.new(0.6, 0.4)
+    scoreContainer.transparency = 1
+
+    local scoreText = guiLoader:Insert("TextLabel", scoreContainer)
+    scoreText.text = "- - - - - - Total score: %s - - - - - -"
+    scoreText:SetFont(48, "assets/fonts/Pixeboy.ttf")
+    scoreText.textColor3 = Color3.new(1, 1, 1)
+    scoreText.size = Vector2.new(1, 0.2)
+    scoreText.anchorPoint = Vector2.new(0.5, 0)
+    scoreText.position = Vector2.new(0.5, 0)
+    scoreText.backgroundTransparency = 1
 
     local playAgainButton = guiLoader:Insert("ImageLabel", fullscreenFrame)
     playAgainButton.image = love.graphics.newImage("assets/ui/button_restart.png")
@@ -60,6 +73,11 @@ function InitializeGui()
     end)
 
     guiLoader.Gui.Visible = false
+
+    GlobalReferences = {
+        ScoreText = scoreText,
+        PlayAgainButton = playAgainButton
+    }
 
     return guiLoader.Gui
 end

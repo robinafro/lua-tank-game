@@ -13,6 +13,10 @@ function Player.new(game)
     self.Camera = nil
     self.Game = game
 
+    self.Score = 0
+    self.GainScorePerKill = 100
+    self.GainScorePerWave = 1000
+
     self.AimAssistEnabled = true
     self.AimAssistCorrectionAngleThreshold = 25
     self.AimAssistShootAngleThreshold = 3

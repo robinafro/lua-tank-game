@@ -80,7 +80,7 @@ function BaseFrame:Render()
         child:Render()
     end
 
-    love.graphics.origin()
+    love.graphics.translate(-posX, -posY)
 
     return pos, size
 end

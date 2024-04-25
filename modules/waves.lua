@@ -65,6 +65,8 @@ local function nextWave()
                     break
                 end
             end
+
+            game.Paths.LocalPlayer.Score = game.Paths.LocalPlayer.Score + game.Paths.LocalPlayer.GainScorePerKill
         end
 
         table.insert(game.Paths.Enemies, enemy)
@@ -101,10 +103,18 @@ return {init = function(g)
             game.RunService:Wait()
         end
 
+        local justStarted = true
+
         game.Paths.Enemies = {}
 
         game.RunService:Connect("Heartbeat", function()
             if #game.Paths.Enemies == 0 then
+                if not justStarted then
+                    game.Paths.LocalPlayer.Score = game.Paths.LocalPlayer.Score + game.Paths.LocalPlayer.GainScorePerWave
+                end
+
+                justStarted = false
+
                 nextWave()
             end
         end)
