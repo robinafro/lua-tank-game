@@ -7,7 +7,7 @@ STRUCTURES = 100
 
 return {init = function(game)
     if game.Paths.Debug then
-        STRUCTURES = 10
+        STRUCTURES = 5
         MAP_SIZE = 10
     end
 

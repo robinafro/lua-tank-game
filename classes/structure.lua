@@ -24,7 +24,21 @@ Structure.Templates = {
             Width = 2,
             Height = 12,
         },
+    },
+
+    Ruin = {
+        {X = -20, Y = 10, Width = 30, Height = 2},
+        {X = -5, Y = 15, Width = 26, Height = 2},
+        {X = -23, Y = 15, Width = 9, Height = 2},
+        {X = -14, Y = 15, Width = 2, Height = 17},
+        {X = -5, Y = 15, Width = 2, Height = 15},
+        {X = 10, Y = 0, Width = 2, Height = 12},
+        {X = 19, Y = 0, Width = 2, Height = 15},
+        {X = -10, Y = 5, Width = 5, Height = 2},
+        {X = -8, Y = 20, Width = 3, Height = 2},
+        -- {X = 5, Y = 10, Width = 2, Height = 8},
     }
+    
 }
 
 Structure.ImageCache = {}
@@ -34,7 +48,7 @@ function Structure.new(game, template, position)
 
     self.Position = position or {X = 0, Y = 0}
     self.Objects = {}
-    self.CellSize = 20
+    self.CellSize = 20 * (0.9 + math.random() * 0.4)
     self.DefaultColor = {0.2, 0.2, 0.2, 1}
     self.DefaultZIndex = 5
     self.Game = game
