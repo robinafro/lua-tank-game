@@ -10,7 +10,7 @@ end
 local Enemy = setmetatable({}, Controller)
 Enemy.__index = Enemy
 
-Enemy.MinAggressivity = 0.07
+Enemy.MinAggressivity = 0.12
 Enemy.MaxAggressivity = 0.4
 
 function Enemy.new(game)
