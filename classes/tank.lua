@@ -63,6 +63,8 @@ function Tank.new(game)
     self.Firerate = 2
     self.Ammo = 1000000000000
     self.BulletForce = self.DefaultBulletForce
+    self.DefaultDamage = 10
+    self.DamageRandomness = 10
 
     self.MaxHealth = 100
     self.Health = self.MaxHealth
@@ -122,7 +124,7 @@ function Tank:Shoot(enemies, friendlies)
         local bullet = Bullet.new(self.X + self.Width / 2, self.Y + self.Height / 2, self.Rotation, self.Game)
 
         bullet.Force = self.BulletForce
-        bullet.Damage = 25
+        bullet.Damage = self.DefaultDamage + math.random() * self.DamageRandomness
         bullet.Whitelist = enemies
         bullet.Blacklist = friendlies
         bullet.Controller = self.Controller

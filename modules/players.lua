@@ -9,6 +9,11 @@ local function init(g)
     localPlayer:SetCamera(cam)
 
     game.RunService:Connect("Stepped", localPlayer:Control(require("classes.tank").new(game)))
+
+    localPlayer.Controlling.Firerate = 1
+    localPlayer.Controlling.DefaultDamage = 80
+    localPlayer.Controlling.DamageRandomness = 30
+    localPlayer.Controlling.BulletForce = 3500
     
     game.ObjectService:SetCamera(cam)
     game.ObjectService:Add(localPlayer.Controlling)

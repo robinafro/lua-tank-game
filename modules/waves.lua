@@ -2,7 +2,7 @@ local Enemy = require("classes.enemy")
 local Tank = require("classes.tank")
 local Collider = require("classes.collider")
 
-local WAVE_ENEMY_MULTIPLIER = 1
+local WAVE_ENEMY_MULTIPLIER = 1 / 2
 local ENEMY_SPAWN_DISTANCE = 1500 * math.max(love.graphics.getWidth(), love.graphics.getHeight()) / 1920
 local ENEMY_SPAWN_INTERVAL = 1
 
@@ -17,8 +17,12 @@ local function spawnEnemy()
     local enemyTank = require("classes.tank").new(game)
     local enemyCollider = require("classes.collider").new(game.Paths)
 
-    enemyTank.ForwSpeed = 100
     enemyTank.RotSpeed = 1
+    enemyTank.ForwSpeed = 100 + math.random(-10, 10)
+    enemyTank.Firerate = math.random(1, 2) / 5
+    enemyTank.BulletForce = math.random(2000, 3000)
+    enemyTank.MaxHealth = ((CurrentWave - 1) * 60 + 80) + math.random(1, 30)
+    enemyTank.Health = enemyTank.MaxHealth
 
     enemyCollider.Object = enemyTank
     enemyCollider.CollisionName = "enemyplayer"
