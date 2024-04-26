@@ -62,12 +62,39 @@ function HealthBillboard(guiLoader, adornee)
     end
 end
 
+function Upgrades(game)
+    local guiLoader = GuiLoader.new(game, "Upgrades")
+
+    local text = guiLoader:Insert("TextLabel")
+    text.position = Vector2.new(0.5, 0.3)
+    text.size = Vector2.new(0.4, 0.15)
+    text.anchorPoint = Vector2.new(0.5, 0.5)
+    text.text = "Upgraded tank: UpgradeName"
+    text:SetFont(48, "assets/fonts/Pixeboy.ttf")
+    text.backgroundTransparency = 1
+    text.textColor3 = Color3.new(1,1,1)
+    text.Visible = false
+
+    game.Signal:connect("playerUpgraded", function(upgrade)
+        text.text = "Upgraded tank: "..upgrade
+        text.Visible = true
+
+        coroutine.wrap(function()
+            game.RunService:Wait(2)
+
+            text.Visible = false
+        end)()
+    end)
+end
+
 return {init = function(game)
     local guiLoader = GuiLoader.new(game, "Healthbars")
 
     while not game.Paths.LocalPlayer do
         game.RunService:Wait()
     end
+
+    Upgrades(game)
 
     local updateFunctions = {}
 

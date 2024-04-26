@@ -22,6 +22,7 @@ local function spawnEnemy()
     enemyTank.Firerate = math.random(1, 2) / 5
     enemyTank.BulletForce = math.random(2000, 3000)
     enemyTank.MaxHealth = ((CurrentWave - 1) * 60 + 80) + math.random(1, 30)
+    enemyTank.DefaultDamage = (CurrentWave - 1) * 4 + math.random(1, 10) + 3
     enemyTank.Health = enemyTank.MaxHealth
     enemyTank.RecoilMultiplier = 0.01
 
@@ -59,6 +60,8 @@ local function nextWave()
         game.Signal:send("enemySpawned", enemy.Enemy)
 
         enemy.Tank.OnDeath = function()
+            local tookHits = enemy.Tank.TookHits
+
             game.RunService:Disconnect("Stepped", enemy.Connection)
 
             enemy.Enemy:Destroy()
@@ -72,6 +75,12 @@ local function nextWave()
             end
 
             game.Paths.LocalPlayer.Score = game.Paths.LocalPlayer.Score + game.Paths.LocalPlayer.GainScorePerKill
+
+            local upgrade = game.Paths.LocalPlayer.Controlling:Upgrade()
+            game.Paths.LocalPlayer.Controlling.Ammo = game.Paths.LocalPlayer.Controlling.Ammo + tookHits
+
+            game.Signal:send("enemyKilled", enemy.Enemy)
+            game.Signal:send("playerUpgraded", upgrade)
         end
 
         table.insert(game.Paths.Enemies, enemy)

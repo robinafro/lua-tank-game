@@ -19,7 +19,7 @@ end
 
 function Signal:connect(key, callback)
     local connection = {
-        callback = callback
+        callback = callback,
     }
 
     self.connections[key] = connection

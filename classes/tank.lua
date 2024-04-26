@@ -4,6 +4,32 @@ Bullet = require("classes.bullet")
 local Tank = setmetatable({}, Object)
 Tank.__index = Tank
 
+Tank.Upgrades = {
+    ["Firerate"] = function(self)
+        self.Firerate = self.Firerate + math.random() + 0.2
+    end,
+
+    ["BulletForce"] = function(self)
+        self.BulletForce = self.BulletForce + math.random() * 100
+    end,
+
+    ["Health"] = function(self)
+        self.MaxHealth = self.MaxHealth + math.random(5, 25)
+    end,
+
+    ["Heal"] = function(self)
+        self.Health = self.MaxHealth
+    end,
+
+    ["Damage"] = function(self)
+        self.DefaultDamage = self.DefaultDamage + math.random(5, 20)
+    end,
+
+    ["Ammo"] = function(self)
+        self.Ammo = self.Ammo + 10
+    end,
+}
+
 function _clamp(val, min, max)
     if val < min then
         return min
@@ -71,6 +97,7 @@ function Tank.new(game)
     self.HealthIncrease = 5 --// Per second
     self.HealDebounce = 3
     self.LastTookDamage = 0
+    self.TookHits = 0
     
     self.Function = function(dt)
         self:Render()
@@ -154,8 +181,23 @@ function Tank:Heal(dt)
     self.Health = math.min(self.Health + self.HealthIncrease * dt, self.MaxHealth)
 end
 
+function Tank:Upgrade()
+    local upgrades = {}; do
+        for i, v in pairs(self.Upgrades) do
+            table.insert(upgrades, i)
+        end
+    end
+
+    local name = upgrades[math.random(1, #upgrades)]
+
+    self.Upgrades[name](self)
+
+    return name
+end
+
 function Tank:TakeDamage(dmg)
     self.Health = self.Health - dmg
+    self.TookHits = self.TookHits + 1
     
     self.LastTookDamage = love.timer.getTime()
 
