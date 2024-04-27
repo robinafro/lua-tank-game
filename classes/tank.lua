@@ -111,6 +111,7 @@ function Tank.new(game)
     self:SetImage("assets/tanks/tank"..math.random(1, 4)..".png")
 
     self._prevAmmo = self.Ammo
+    self.AmmoChanged = require("classes.event").new()
     
     return self
 end
@@ -144,7 +145,8 @@ function Tank:Update(dt)
     end
 
     if self.Ammo ~= self._prevAmmo then
-        self.Game.Signal:send("ammoChanged", self.Ammo)
+        -- self.Game.Signal:send("ammoChanged", self.Ammo, self)
+        self.AmmoChanged:Fire(self.Ammo)
     end
 
     self._prevAmmo = self.Ammo

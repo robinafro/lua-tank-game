@@ -55,6 +55,7 @@ end
 local function nextWave()
     CurrentWave = CurrentWave + 1
 
+    game.Signal:send("waveChanged", CurrentWave)
     for i = 1, math.ceil(CurrentWave * WAVE_ENEMY_MULTIPLIER) do
         local enemy = spawnEnemy()
 

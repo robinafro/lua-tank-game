@@ -94,19 +94,40 @@ function Upgrades(game)
     end)
 end
 
+function Wave(game)
+    local guiLoader = GuiLoader.new(game, "Upgrades")
+
+    local text = guiLoader:Insert("TextLabel")
+    text.position = Vector2.new(0.01, 0.0125)
+    text.size = Vector2.new(0.4, 0.15)
+    text.anchorPoint = Vector2.new(0, 0)
+    text.text = "WAVE: 0"
+    text.textAlign = "left"
+    text.textVerticalAlign = "top"
+    text:SetFont(36, "assets/fonts/Pixeboy.ttf")
+    text.backgroundTransparency = 1
+    text.textColor3 = Color3.new(1,1,1)
+
+    game.Signal:connect("waveChanged", function(wave)
+        text.text = "WAVE: "..wave
+    end)
+end
+
 function AmmoAndFirerate(game)
     local guiLoader = GuiLoader.new(game, "AmmoAndFirerate")
 
     local text = guiLoader:Insert("TextLabel")
-    text.position = Vector2.new(1, 1)
-    text.size = Vector2.new(0.04, 0.03)
+    text.position = Vector2.new(0.99, 0.99)
+    text.size = Vector2.new(0.15, 0.1)
     text.anchorPoint = Vector2.new(1, 1)
     text.text = "Ammo: " .. game.Paths.LocalPlayer.Controlling.Ammo
+    text.textAlign = "right"
+    text.textVerticalAlign = "bottom"
     text:SetFont(24, "assets/fonts/Pixeboy.ttf")
     text.backgroundTransparency = 1
     text.textColor3 = Color3.new(1,1,1)
 
-    game.Signal:connect("ammoChanged", function(ammo)
+    game.Paths.LocalPlayer.Controlling.AmmoChanged:Connect(function(ammo)
         text.text = "Ammo: "..ammo
     end)
 
@@ -147,6 +168,7 @@ return {init = function(game)
 
     Upgrades(game)
     AmmoAndFirerate(game)
+    Wave(game)
 
     local updateFunctions = {}
 
