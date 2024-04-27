@@ -112,6 +112,7 @@ function Tank.new(game)
 
     self._prevAmmo = self.Ammo
     self.AmmoChanged = require("classes.event").new()
+    self.LastGeneratedAmmo = 0
     
     return self
 end
@@ -142,6 +143,13 @@ function Tank:Update(dt)
     --// Heal
     if love.timer.getTime() - self.LastTookDamage > self.HealDebounce then
         self:Heal(dt)
+    end
+
+    if self.Ammo == 0 and love.timer.getTime() - self.LastGeneratedAmmo > 10 then
+        self.Ammo = 1
+        self.LastGeneratedAmmo = love.timer.getTime()
+    elseif self.Ammo ~= 0 then
+        self.LastGeneratedAmmo = love.timer.getTime()
     end
 
     if self.Ammo ~= self._prevAmmo then
@@ -176,10 +184,6 @@ function Tank:Shoot(enemies, friendlies)
 
         self.RotVelocity = self.RotVelocity + bullet.Force * self.RecoilRotationMultiplier * (math.random() - 0.5) * 2 * math.max(-self.ForwSpeed / 1000000, self.ForwVelocity / self.ForwSpeed)
         self.ForwVelocity = self.ForwVelocity - bullet.Force * self.RecoilMultiplier
-
-        if self.Ammo == 0 then
-            self.BulletForce = self.DefaultBulletForce
-        end
 
         if self.OnFired then
             self.OnFired(bullet)

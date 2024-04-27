@@ -153,7 +153,13 @@ function AmmoAndFirerate(game)
     firerateBar.color = Color3.new(0.8, 0.8, 0.8)
 
     game.RunService:Connect("RenderStepped", function()
-        local ratio = (love.timer.getTime() - game.Paths.LocalPlayer.Controlling.LastShot) / (1 / game.Paths.LocalPlayer.Controlling.Firerate)
+        local ratio = 0
+
+        if game.Paths.LocalPlayer.Controlling.Ammo == 0 then
+            ratio = (love.timer.getTime() - game.Paths.LocalPlayer.Controlling.LastGeneratedAmmo) / 10
+        else
+            ratio = (love.timer.getTime() - game.Paths.LocalPlayer.Controlling.LastShot) / (1 / game.Paths.LocalPlayer.Controlling.Firerate)
+        end
         
         firerateBar.size = Vector2.new(math.max(math.min(ratio, 1), 0), 1)
     end)
