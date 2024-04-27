@@ -9,7 +9,7 @@ Tank.Upgrades = {
         self.Firerate = self.Firerate + math.random() + 0.2
     end,
 
-    ["BulletForce"] = function(self)
+    ["Bullet force"] = function(self)
         self.BulletForce = self.BulletForce + math.random() * 100
     end,
 
@@ -17,7 +17,7 @@ Tank.Upgrades = {
         self.MaxHealth = self.MaxHealth + math.random(5, 25)
     end,
 
-    ["Heal"] = function(self)
+    ["Full heal"] = function(self)
         self.Health = self.MaxHealth
     end,
 
@@ -87,7 +87,7 @@ function Tank.new(game)
     self.RecoilRotationMultiplier = 5
     self.LastShot = 0
     self.Firerate = 2
-    self.Ammo = 1000000000000
+    self.Ammo = 5
     self.BulletForce = self.DefaultBulletForce
     self.DefaultDamage = 10
     self.DamageRandomness = 10
@@ -109,6 +109,8 @@ function Tank.new(game)
     self.RaycastName = "tank"
 
     self:SetImage("assets/tanks/tank"..math.random(1, 4)..".png")
+
+    self._prevAmmo = self.Ammo
     
     return self
 end
@@ -140,6 +142,12 @@ function Tank:Update(dt)
     if love.timer.getTime() - self.LastTookDamage > self.HealDebounce then
         self:Heal(dt)
     end
+
+    if self.Ammo ~= self._prevAmmo then
+        self.Game.Signal:send("ammoChanged", self.Ammo)
+    end
+
+    self._prevAmmo = self.Ammo
 end
 
 function Tank:Shoot(enemies, friendlies)

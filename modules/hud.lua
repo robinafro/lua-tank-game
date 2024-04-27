@@ -62,6 +62,7 @@ function HealthBillboard(guiLoader, adornee)
     end
 end
 
+local lastShownUI = 0
 function Upgrades(game)
     local guiLoader = GuiLoader.new(game, "Upgrades")
 
@@ -79,11 +80,61 @@ function Upgrades(game)
         text.text = "Upgraded tank: "..upgrade
         text.Visible = true
 
+        lastShownUI = love.timer.getTime()
+
         coroutine.wrap(function()
             game.RunService:Wait(2)
 
+            if love.timer.getTime() - lastShownUI < 2 then
+                return
+            end
+
             text.Visible = false
         end)()
+    end)
+end
+
+function AmmoAndFirerate(game)
+    local guiLoader = GuiLoader.new(game, "AmmoAndFirerate")
+
+    local text = guiLoader:Insert("TextLabel")
+    text.position = Vector2.new(1, 1)
+    text.size = Vector2.new(0.04, 0.03)
+    text.anchorPoint = Vector2.new(1, 1)
+    text.text = "Ammo: " .. game.Paths.LocalPlayer.Controlling.Ammo
+    text:SetFont(24, "assets/fonts/Pixeboy.ttf")
+    text.backgroundTransparency = 1
+    text.textColor3 = Color3.new(1,1,1)
+
+    game.Signal:connect("ammoChanged", function(ammo)
+        text.text = "Ammo: "..ammo
+    end)
+
+    local guiLoaderBillboard = GuiLoader.new(game, "Upgrades", "BillboardGui")
+    guiLoaderBillboard.Gui.size = Vector2.new(90, 15)
+    guiLoaderBillboard.Gui.adornee = game.Paths.LocalPlayer.Controlling
+    guiLoaderBillboard.Gui.offset = Vector2.new(game.Paths.LocalPlayer.Controlling.Width / 2, game.Paths.LocalPlayer.Controlling.Height + 10)
+
+    local background = guiLoaderBillboard:Insert("Frame")
+    background.size = Vector2.new(1,1)
+    background.position = Vector2.new(0.5, 0.5)
+    background.anchorPoint = Vector2.new(0.5, 0.5)
+    background.color = Color3.new(0,0,0)
+
+    local container = guiLoaderBillboard:Insert("Frame", background)
+    container.size = Vector2.new(0.88, 0.45)
+    container.position = Vector2.new(0.5, 0.5)
+    container.anchorPoint = Vector2.new(0.5, 0.5)
+    container.color = Color3.new(0.1,0.1,0.1)
+
+    local firerateBar = guiLoaderBillboard:Insert("Frame", container)
+    firerateBar.size = Vector2.new(0.5, 1)
+    firerateBar.color = Color3.new(0.8, 0.8, 0.8)
+
+    game.RunService:Connect("RenderStepped", function()
+        local ratio = (love.timer.getTime() - game.Paths.LocalPlayer.Controlling.LastShot) / (1 / game.Paths.LocalPlayer.Controlling.Firerate)
+        
+        firerateBar.size = Vector2.new(math.max(math.min(ratio, 1), 0), 1)
     end)
 end
 
@@ -95,6 +146,7 @@ return {init = function(game)
     end
 
     Upgrades(game)
+    AmmoAndFirerate(game)
 
     local updateFunctions = {}
 
@@ -117,6 +169,7 @@ return {init = function(game)
 
         local loader = GuiLoader.new(game, "Healthbars", "BillboardGui")
         loader.Gui.size = Vector2.new(90, 15)
+        loader.Gui.offset = Vector2.new(enemy.Controlling.Width / 2, -10)
         loader.Gui.adornee = enemy.Controlling
 
         table.insert(updateFunctions, HealthBillboard(loader, enemy))

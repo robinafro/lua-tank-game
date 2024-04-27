@@ -19,12 +19,13 @@ local function spawnEnemy()
 
     enemyTank.RotSpeed = 1
     enemyTank.ForwSpeed = 100 + math.random(-10, 10)
-    enemyTank.Firerate = math.random(1, 2) / 5
+    enemyTank.Firerate = math.random(1, 2) / 5 + (CurrentWave - 1) * 0.1
     enemyTank.BulletForce = math.random(2000, 3000)
     enemyTank.MaxHealth = ((CurrentWave - 1) * 60 + 80) + math.random(1, 30)
     enemyTank.DefaultDamage = (CurrentWave - 1) * 4 + math.random(1, 10) + 3
     enemyTank.Health = enemyTank.MaxHealth
     enemyTank.RecoilMultiplier = 0.01
+    enemyTank.Ammo = math.huge
 
     enemyCollider.Object = enemyTank
     enemyCollider.CollisionName = "enemyplayer"
@@ -81,6 +82,7 @@ local function nextWave()
 
             game.Signal:send("enemyKilled", enemy.Enemy)
             game.Signal:send("playerUpgraded", upgrade)
+            game.Signal:send("ammoChanged", game.Paths.LocalPlayer.Controlling.Ammo)
         end
 
         table.insert(game.Paths.Enemies, enemy)
