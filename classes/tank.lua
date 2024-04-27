@@ -153,7 +153,6 @@ function Tank:Update(dt)
     end
 
     if self.Ammo ~= self._prevAmmo then
-        -- self.Game.Signal:send("ammoChanged", self.Ammo, self)
         self.AmmoChanged:Fire(self.Ammo)
     end
 
