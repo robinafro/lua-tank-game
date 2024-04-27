@@ -71,16 +71,20 @@ function Structure:Generate()
         obj.ZIndex = object.ZIndex or self.DefaultZIndex
         obj.RaycastName = "structure"
 
-        local img = object.Image
+        local img = object.Image or "assets/textures/rock.png"
+
+        -- obj:SetImage(img)
 
         if img then
-            if not Structure.ImageCache[img] then
-                Structure.ImageCache[img] = love.graphics.newImage(img)
-            end
+            coroutine.wrap(function()
+                if not Structure.ImageCache[img] then
+                    -- Structure.ImageCache[img] = love.graphics.newImage(img)
+                end
 
-            obj.Image = Structure.ImageCache[img]
+                -- obj.Image = Structure.ImageCache[img]
+            end)()
         end
-
+        
         local collider = Collider.new(self.Game.Paths)
         collider.Static = true
         collider.CanTouch = true
