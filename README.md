@@ -5,6 +5,8 @@ an infinite, wave-based PvE game with tanks.
 
 ## installation
 Pre-compiled programs for all operating systems can be found in the [releases](https://github.com/robinafro/lua-tank-game/releases) page.
+
+Note: For Linux users, you will need to install Love2D separately and run the .love file.
 ### building from source
 To build the game from source, follow these steps (linux):
 1. download the source code, you can use ```git clone https://github.com/robinafro/lua-tank-game.git```
