@@ -23,7 +23,7 @@ img[alt~="center"] {
 }
 </style>
 
-![bg](assets/Background1.png)
+![bg](assets/renders/render1_3840x2160_post_processed.png)
 # lua-tank-game
 *an infinite, wave-based PvE game with tanks. written in LÖVE.*
 
