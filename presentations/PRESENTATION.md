@@ -25,7 +25,7 @@ img[alt~="center"] {
 
 ![bg](assets/Background1.png)
 # lua-tank-game
-*an infinite, wave-based PvE game with tanks.*
+*an infinite, wave-based PvE game with tanks. written in LÖVE.*
 
 ---
 
@@ -110,4 +110,4 @@ img[alt~="right"] {
 
 ---
 
-<h2 style="text-align: center"><u>děkuji za pozornost</u></h2>
+<h2 style="text-align: center; text-shadow: 0px 0px 1px white;">děkuji za pozornost.</h2>
