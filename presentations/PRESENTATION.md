@@ -78,7 +78,7 @@ img[alt~="right"] {
 
 # game loop
 
-![bg](assets/game_loop_bg.png)
+![bg](assets/renders/render2_3840x2160_post_processed.png)
 
 - spawnují se vlny nepřátel. po každé vlně se začne další, ve které je o něco víc nepřátel.
 <br>
@@ -90,7 +90,7 @@ img[alt~="right"] {
 
 # nepřátelské AI
 
-- nepřátelské tanky vypočítávají cestu k hráči pomocí A* pathfinding algoritmu.
+- nepřátelské tanky vypočítávají cestu k hráči pomocí **A*** pathfinding algoritmu.
 <br>
 - pokud hráč není ve viditelnosti, nepřátelský tank se snaží najít nejbližší bod, kde hráč je vidět.
 <br>
