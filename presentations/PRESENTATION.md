@@ -48,7 +48,7 @@ img[alt~="right"] {
 
 - barva mapy se mění podle perlin noisu.
 - na náhodných místech se generují struktury:
-![width:450 round margin](assets/structures.png)
+![width:550 round margin](assets/structures.png)
 
 ---
 
@@ -60,11 +60,11 @@ img[alt~="right"] {
 
 ### ...můžou se pohybovat dopředu a dozadu...
 
-![height:500 round margin center](assets/structures.png)
+![height:500 round margin center](assets/renders/render4_3840x2160_post_processed.png)
 
 ---
 
-![height:500 round margin center](assets/structures.png)
+![height:500 round margin center](assets/renders/render5_3840x2160_post_processed.png)
 
 <h3 style="text-align: right">...otáčet se doprava a doleva...</h3>
 
@@ -72,7 +72,7 @@ img[alt~="right"] {
 
 # <h2 style="text-align: center">...a střílet.</h2>
 
-![height:500 round margin center](assets/structures.png)
+![height:500 round margin center](assets/renders/render3_3840x2160_post_processed.png)
 
 ---
 
