@@ -111,3 +111,26 @@ img[alt~="right"] {
 ---
 
 <h2 style="text-align: center; text-shadow: 0px 0px 1px white;">děkuji za pozornost.</h2>
+
+---
+
+<style>
+.container {
+  margin: 25px 25px 25px 25px;
+  width: 50%;
+}
+</style>
+
+<div style="width: 100%; height:100%; display: flex; flex-direction: row">
+  <div class="container">
+    <h1><b>instalace</b></h1>
+    - všechen kód i tato prezentace je open-source.
+    <br><br>
+    - na githubu jsou předkompilované soubory pro Windows, MacOS a Linux.
+  </div>
+
+  <div class="container" style="display: flex; flex-direction: column">
+    <code style="font-size: 0.92rem">git clone https://github.com/robinafro/lua-tank-game.git</code>
+    <img style="border-radius: 10px; margin: 30px" src="assets/api.qrserver.png"/>    
+  </div>
+</div>
