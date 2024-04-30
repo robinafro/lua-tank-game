@@ -44,14 +44,6 @@ img[alt~="right"] {
 
 ---
 
-# procedurální mapa
-
-- barva mapy se mění podle perlin noisu.
-- na náhodných místech se generují struktury:
-![width:550 round margin](assets/structures.png)
-
----
-
 # tanky
 
 - všechny tanky mají nějaký počet nábojů a životů...
@@ -75,6 +67,15 @@ img[alt~="right"] {
 ![height:500 round margin center](assets/renders/render3_3840x2160_post_processed.png)
 
 ---
+
+# procedurální mapa
+
+- barva mapy se mění podle perlin noisu.
+- na náhodných místech se generují struktury:
+![width:550 round margin](assets/structures.png)
+
+---
+
 
 # game loop
 
