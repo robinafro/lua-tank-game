@@ -1,4 +1,4 @@
 function love.conf(t)
-    t.console = true
-    t.window.vsync = 0
+    t.console = false
+    t.window.vsync = true
 end
