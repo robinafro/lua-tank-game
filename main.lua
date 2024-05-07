@@ -71,14 +71,16 @@ function love.load(args)
     --// Load modules
     local runningModules = LoadModules(game)
 
-    function love.keypressed(key)
-        if key == "escape" then
-            game.Signal:send("pause")
-        elseif key == "r" then
-            game.Signal:send("restart")
-        end
-    end
-
+    --// Only used for debugging
+    -- function love.keypressed(key)
+    --     if key == "escape" then
+    --         game.Signal:send("pause")
+    --     elseif key == "r" then
+    --         game.Signal:send("restart")
+    --     end
+    -- end
+    --//////////////////////////////////
+    
     game.Signal:connect("restart", function()
         RunService:Trigger("Restart")
 
