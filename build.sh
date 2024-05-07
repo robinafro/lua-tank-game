@@ -8,6 +8,8 @@ echo "Creating .love file..."
 # Create a .love file
 cp -r . /tmp/lua-tank-game > /dev/null
 rm -r /tmp/lua-tank-game/bin
+rm -rf /tmp/lua-tank-game/presentations
+rm -rf /tmp/lua-tank-game/.git
 
 (cd /tmp/lua-tank-game && zip -9 -r ../lua-tank-game.love . > /dev/null)
 
@@ -67,7 +69,8 @@ cp bin/lua-tank-game.love bin/lua-tank-game/love.app/Contents/Resources
 # Zip
 echo "Zipping..."
 
-(cd bin && zip -r lua-tank-game-macos.zip lua-tank-game > /dev/null)
+# (cd bin && zip -r lua-tank-game-macos.zip lua-tank-game > /dev/null) # Commented out .zip, file was too big
+(cd bin && tar -czvf lua-tank-game-macos.tar.gz lua-tank-game)
 rm -r bin/lua-tank-game
 
 echo "Finished building for MacOS!"
@@ -75,7 +78,8 @@ echo "Creating Linux version..."
 
 # Zip
 cp build_assets/linux_readme.txt bin/readme.txt
-(cd bin && zip -r lua-tank-game-linux-x86_64.zip lua-tank-game.love readme.txt)
+# (cd bin && zip -r lua-tank-game-linux-x86_64.zip lua-tank-game.love readme.txt) # Used tar instead of zip to be more consistent and reduce file size
+(cd bin && tar -czvf lua-tank-game-linux-x86_64.tar.gz lua-tank-game.love readme.txt)
 rm bin/lua-tank-game.love
 rm bin/readme.txt
 
